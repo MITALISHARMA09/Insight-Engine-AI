@@ -1,0 +1,290 @@
+{
+  "dataset_id": "f8d15b69-d585-40ef-9a4b-0f80a15f8093",
+  "original_filename": "bank_transactions_data_2.csv",
+  "status": "processing",
+  "row_count": 2512,
+  "column_count": 16,
+  "columns": [
+    "TransactionID",
+    "AccountID",
+    "TransactionAmount",
+    "TransactionDate",
+    "TransactionType",
+    "Location",
+    "DeviceID",
+    "IP Address",
+    "MerchantID",
+    "Channel",
+    "CustomerAge",
+    "CustomerOccupation",
+    "TransactionDuration",
+    "LoginAttempts",
+    "AccountBalance",
+    "PreviousTransactionDate"
+  ],
+  "dtypes": {
+    "TransactionID": "str",
+    "AccountID": "str",
+    "TransactionAmount": "float64",
+    "TransactionDate": "str",
+    "TransactionType": "str",
+    "Location": "str",
+    "DeviceID": "str",
+    "IP Address": "str",
+    "MerchantID": "str",
+    "Channel": "str",
+    "CustomerAge": "int64",
+    "CustomerOccupation": "str",
+    "TransactionDuration": "int64",
+    "LoginAttempts": "int64",
+    "AccountBalance": "float64",
+    "PreviousTransactionDate": "str"
+  },
+  "sample_rows": [
+    {
+      "TransactionID": "TX000001",
+      "AccountID": "AC00128",
+      "TransactionAmount": 14.09,
+      "TransactionDate": "2023-04-11 16:29:14",
+      "TransactionType": "Debit",
+      "Location": "San Diego",
+      "DeviceID": "D000380",
+      "IP Address": "162.198.218.92",
+      "MerchantID": "M015",
+      "Channel": "ATM",
+      "CustomerAge": 70,
+      "CustomerOccupation": "Doctor",
+      "TransactionDuration": 81,
+      "LoginAttempts": 1,
+      "AccountBalance": 5112.21,
+      "PreviousTransactionDate": "2024-11-04 08:08:08"
+    },
+    {
+      "TransactionID": "TX000002",
+      "AccountID": "AC00455",
+      "TransactionAmount": 376.24,
+      "TransactionDate": "2023-06-27 16:44:19",
+      "TransactionType": "Debit",
+      "Location": "Houston",
+      "DeviceID": "D000051",
+      "IP Address": "13.149.61.4",
+      "MerchantID": "M052",
+      "Channel": "ATM",
+      "CustomerAge": 68,
+      "CustomerOccupation": "Doctor",
+      "TransactionDuration": 141,
+      "LoginAttempts": 1,
+      "AccountBalance": 13758.91,
+      "PreviousTransactionDate": "2024-11-04 08:09:35"
+    },
+    {
+      "TransactionID": "TX000003",
+      "AccountID": "AC00019",
+      "TransactionAmount": 126.29,
+      "TransactionDate": "2023-07-10 18:16:08",
+      "TransactionType": "Debit",
+      "Location": "Mesa",
+      "DeviceID": "D000235",
+      "IP Address": "215.97.143.157",
+      "MerchantID": "M009",
+      "Channel": "Online",
+      "CustomerAge": 19,
+      "CustomerOccupation": "Student",
+      "TransactionDuration": 56,
+      "LoginAttempts": 1,
+      "AccountBalance": 1122.35,
+      "PreviousTransactionDate": "2024-11-04 08:07:04"
+    },
+    {
+      "TransactionID": "TX000004",
+      "AccountID": "AC00070",
+      "TransactionAmount": 184.5,
+      "TransactionDate": "2023-05-05 16:32:11",
+      "TransactionType": "Debit",
+      "Location": "Raleigh",
+      "DeviceID": "D000187",
+      "IP Address": "200.13.225.150",
+      "MerchantID": "M002",
+      "Channel": "Online",
+      "CustomerAge": 26,
+      "CustomerOccupation": "Student",
+      "TransactionDuration": 25,
+      "LoginAttempts": 1,
+      "AccountBalance": 8569.06,
+      "PreviousTransactionDate": "2024-11-04 08:09:06"
+    },
+    {
+      "TransactionID": "TX000005",
+      "AccountID": "AC00411",
+      "TransactionAmount": 13.45,
+      "TransactionDate": "2023-10-16 17:51:24",
+      "TransactionType": "Credit",
+      "Location": "Atlanta",
+      "DeviceID": "D000308",
+      "IP Address": "65.164.3.100",
+      "MerchantID": "M091",
+      "Channel": "Online",
+      "CustomerAge": 26,
+      "CustomerOccupation": "Student",
+      "TransactionDuration": 198,
+      "LoginAttempts": 1,
+      "AccountBalance": 7429.4,
+      "PreviousTransactionDate": "2024-11-04 08:06:39"
+    }
+  ],
+  "domain": "sales",
+  "domain_details": {
+    "domain": "sales",
+    "sub_domain": "sales",
+    "confidence": 0.4,
+    "likely_questions": [
+      "What are the key trends in this dataset?",
+      "Which values are highest?",
+      "Are there any anomalies?"
+    ],
+    "key_metrics": [
+      "TransactionID",
+      "AccountID",
+      "TransactionAmount"
+    ],
+    "reasoning": "Determined by keyword matching (LLM unavailable)."
+  },
+  "profiling_report": {
+    "total_rows": 2512,
+    "total_columns": 16,
+    "columns": [
+      "TransactionID",
+      "AccountID",
+      "TransactionAmount",
+      "TransactionDate",
+      "TransactionType",
+      "Location",
+      "DeviceID",
+      "IP Address",
+      "MerchantID",
+      "Channel",
+      "CustomerAge",
+      "CustomerOccupation",
+      "TransactionDuration",
+      "LoginAttempts",
+      "AccountBalance",
+      "PreviousTransactionDate"
+    ],
+    "dtypes": {
+      "TransactionID": "str",
+      "AccountID": "str",
+      "TransactionAmount": "float64",
+      "TransactionDate": "str",
+      "TransactionType": "str",
+      "Location": "str",
+      "DeviceID": "str",
+      "IP Address": "str",
+      "MerchantID": "str",
+      "Channel": "str",
+      "CustomerAge": "int64",
+      "CustomerOccupation": "str",
+      "TransactionDuration": "int64",
+      "LoginAttempts": "int64",
+      "AccountBalance": "float64",
+      "PreviousTransactionDate": "str"
+    },
+    "missing_values": {},
+    "duplicates": {
+      "count": 0,
+      "percentage": 0.0,
+      "has_duplicates": false
+    },
+    "outliers": {
+      "TransactionAmount": {
+        "count": 113,
+        "percentage": 4.5,
+        "lower_bound": -417.0788,
+        "upper_bound": 913.4913,
+        "min_value": 0.26,
+        "max_value": 1919.11
+      }
+    },
+    "type_issues": {
+      "TransactionDate": {
+        "likely_type": "datetime",
+        "current_type": "object"
+      },
+      "PreviousTransactionDate": {
+        "likely_type": "datetime",
+        "current_type": "object"
+      }
+    },
+    "constant_columns": [],
+    "high_cardinality": {
+      "TransactionID": {
+        "unique_count": 2512,
+        "unique_ratio": 1.0
+      },
+      "TransactionDate": {
+        "unique_count": 2512,
+        "unique_ratio": 1.0
+      }
+    },
+    "quality_score": 93.0,
+    "issues_count": 3
+  },
+  "quality_score": 93.0,
+  "quality_summary": "Your data has a quality score of 93.0/100. Here's what we found:\n\u2022 Some unusual values were found in: TransactionAmount\n\u2022 Some columns have mixed data types that need fixing",
+  "cleaning_plan": [
+    {
+      "action": "fix_dtype",
+      "column": "TransactionDate",
+      "target_type": "datetime"
+    },
+    {
+      "action": "fix_dtype",
+      "column": "PreviousTransactionDate",
+      "target_type": "datetime"
+    },
+    {
+      "action": "cap_outliers",
+      "column": "TransactionAmount",
+      "lower": -417.0788,
+      "upper": 913.4913
+    }
+  ],
+  "cleaning_report": {
+    "actions_applied": [
+      {
+        "action": "cap_outliers",
+        "column": "TransactionAmount",
+        "lower": -417.0788,
+        "upper": 913.4913
+      }
+    ],
+    "actions_skipped": [
+      {
+        "action": "fix_dtype",
+        "column": "TransactionDate",
+        "target_type": "datetime",
+        "reason": "to_datetime() got an unexpected keyword argument 'infer_datetime_format'"
+      },
+      {
+        "action": "fix_dtype",
+        "column": "PreviousTransactionDate",
+        "target_type": "datetime",
+        "reason": "to_datetime() got an unexpected keyword argument 'infer_datetime_format'"
+      }
+    ],
+    "rows_before": 2512,
+    "rows_after": 2512,
+    "columns_before": 16,
+    "columns_after": 16,
+    "rows_removed": 0,
+    "columns_removed": 0
+  },
+  "cleaning_summary": "We cleaned your dataset with 1 improvements:\n\u2022 Corrected extreme values in 'TransactionAmount'\n\u2022 2 minor fixes were skipped (already clean)",
+  "is_cleaned": true,
+  "has_embeddings": true,
+  "rag_info": {
+    "chunks_count": 67,
+    "index_path": "./datasets\\f8d15b69-d585-40ef-9a4b-0f80a15f8093\\index.faiss",
+    "chunks_path": "./datasets\\f8d15b69-d585-40ef-9a4b-0f80a15f8093\\chunks.pkl",
+    "embedding_dim": 256
+  }
+}

@@ -1,0 +1,390 @@
+{
+  "dataset_id": "982c3a6a-6e4b-44b3-877a-c43e562d989d",
+  "original_filename": "loan.csv",
+  "status": "processing",
+  "row_count": 614,
+  "column_count": 13,
+  "columns": [
+    "Loan_ID",
+    "Gender",
+    "Married",
+    "Dependents",
+    "Education",
+    "Self_Employed",
+    "ApplicantIncome",
+    "CoapplicantIncome",
+    "LoanAmount",
+    "Loan_Amount_Term",
+    "Credit_History",
+    "Property_Area",
+    "Loan_Status"
+  ],
+  "dtypes": {
+    "Loan_ID": "str",
+    "Gender": "str",
+    "Married": "str",
+    "Dependents": "str",
+    "Education": "str",
+    "Self_Employed": "str",
+    "ApplicantIncome": "int64",
+    "CoapplicantIncome": "float64",
+    "LoanAmount": "float64",
+    "Loan_Amount_Term": "float64",
+    "Credit_History": "float64",
+    "Property_Area": "str",
+    "Loan_Status": "str"
+  },
+  "sample_rows": [
+    {
+      "Loan_ID": "LP001002",
+      "Gender": "Male",
+      "Married": "No",
+      "Dependents": "0",
+      "Education": "Graduate",
+      "Self_Employed": "No",
+      "ApplicantIncome": 5849,
+      "CoapplicantIncome": 0.0,
+      "LoanAmount": NaN,
+      "Loan_Amount_Term": 360.0,
+      "Credit_History": 1.0,
+      "Property_Area": "Urban",
+      "Loan_Status": "Y"
+    },
+    {
+      "Loan_ID": "LP001003",
+      "Gender": "Male",
+      "Married": "Yes",
+      "Dependents": "1",
+      "Education": "Graduate",
+      "Self_Employed": "No",
+      "ApplicantIncome": 4583,
+      "CoapplicantIncome": 1508.0,
+      "LoanAmount": 128.0,
+      "Loan_Amount_Term": 360.0,
+      "Credit_History": 1.0,
+      "Property_Area": "Rural",
+      "Loan_Status": "N"
+    },
+    {
+      "Loan_ID": "LP001005",
+      "Gender": "Male",
+      "Married": "Yes",
+      "Dependents": "0",
+      "Education": "Graduate",
+      "Self_Employed": "Yes",
+      "ApplicantIncome": 3000,
+      "CoapplicantIncome": 0.0,
+      "LoanAmount": 66.0,
+      "Loan_Amount_Term": 360.0,
+      "Credit_History": 1.0,
+      "Property_Area": "Urban",
+      "Loan_Status": "Y"
+    },
+    {
+      "Loan_ID": "LP001006",
+      "Gender": "Male",
+      "Married": "Yes",
+      "Dependents": "0",
+      "Education": "Not Graduate",
+      "Self_Employed": "No",
+      "ApplicantIncome": 2583,
+      "CoapplicantIncome": 2358.0,
+      "LoanAmount": 120.0,
+      "Loan_Amount_Term": 360.0,
+      "Credit_History": 1.0,
+      "Property_Area": "Urban",
+      "Loan_Status": "Y"
+    },
+    {
+      "Loan_ID": "LP001008",
+      "Gender": "Male",
+      "Married": "No",
+      "Dependents": "0",
+      "Education": "Graduate",
+      "Self_Employed": "No",
+      "ApplicantIncome": 6000,
+      "CoapplicantIncome": 0.0,
+      "LoanAmount": 141.0,
+      "Loan_Amount_Term": 360.0,
+      "Credit_History": 1.0,
+      "Property_Area": "Urban",
+      "Loan_Status": "Y"
+    }
+  ],
+  "domain": "general",
+  "domain_details": {
+    "domain": "general",
+    "sub_domain": "general",
+    "confidence": 0.4,
+    "likely_questions": [
+      "What are the key trends in this dataset?",
+      "Which values are highest?",
+      "Are there any anomalies?"
+    ],
+    "key_metrics": [
+      "Loan_ID",
+      "Gender",
+      "Married"
+    ],
+    "reasoning": "Determined by keyword matching (LLM unavailable)."
+  },
+  "profiling_report": {
+    "total_rows": 614,
+    "total_columns": 13,
+    "columns": [
+      "Loan_ID",
+      "Gender",
+      "Married",
+      "Dependents",
+      "Education",
+      "Self_Employed",
+      "ApplicantIncome",
+      "CoapplicantIncome",
+      "LoanAmount",
+      "Loan_Amount_Term",
+      "Credit_History",
+      "Property_Area",
+      "Loan_Status"
+    ],
+    "dtypes": {
+      "Loan_ID": "str",
+      "Gender": "str",
+      "Married": "str",
+      "Dependents": "str",
+      "Education": "str",
+      "Self_Employed": "str",
+      "ApplicantIncome": "int64",
+      "CoapplicantIncome": "float64",
+      "LoanAmount": "float64",
+      "Loan_Amount_Term": "float64",
+      "Credit_History": "float64",
+      "Property_Area": "str",
+      "Loan_Status": "str"
+    },
+    "missing_values": {
+      "Gender": {
+        "count": 13,
+        "percentage": 2.12,
+        "dtype": "str"
+      },
+      "Married": {
+        "count": 3,
+        "percentage": 0.49,
+        "dtype": "str"
+      },
+      "Dependents": {
+        "count": 15,
+        "percentage": 2.44,
+        "dtype": "str"
+      },
+      "Self_Employed": {
+        "count": 32,
+        "percentage": 5.21,
+        "dtype": "str"
+      },
+      "LoanAmount": {
+        "count": 22,
+        "percentage": 3.58,
+        "dtype": "float64"
+      },
+      "Loan_Amount_Term": {
+        "count": 14,
+        "percentage": 2.28,
+        "dtype": "float64"
+      },
+      "Credit_History": {
+        "count": 50,
+        "percentage": 8.14,
+        "dtype": "float64"
+      }
+    },
+    "duplicates": {
+      "count": 0,
+      "percentage": 0.0,
+      "has_duplicates": false
+    },
+    "outliers": {
+      "ApplicantIncome": {
+        "count": 50,
+        "percentage": 8.14,
+        "lower_bound": -1498.75,
+        "upper_bound": 10171.25,
+        "min_value": 150.0,
+        "max_value": 81000.0
+      },
+      "CoapplicantIncome": {
+        "count": 18,
+        "percentage": 2.93,
+        "lower_bound": -3445.875,
+        "upper_bound": 5743.125,
+        "min_value": 0.0,
+        "max_value": 41667.0
+      },
+      "LoanAmount": {
+        "count": 39,
+        "percentage": 6.59,
+        "lower_bound": -2.0,
+        "upper_bound": 270.0,
+        "min_value": 9.0,
+        "max_value": 700.0
+      }
+    },
+    "type_issues": {
+      "Dependents": {
+        "likely_type": "numeric",
+        "current_type": "object"
+      }
+    },
+    "constant_columns": [],
+    "high_cardinality": {
+      "Loan_ID": {
+        "unique_count": 614,
+        "unique_ratio": 1.0
+      }
+    },
+    "quality_score": 86.2,
+    "issues_count": 11
+  },
+  "quality_score": 86.2,
+  "quality_summary": "Your data has a quality score of 86.2/100. Here's what we found:\n\u2022 Some entries are missing in columns like: Gender, Married, Dependents\n\u2022 Some unusual values were found in: ApplicantIncome, CoapplicantIncome\n\u2022 Some columns have mixed data types that need fixing",
+  "cleaning_plan": [
+    {
+      "action": "fill_missing",
+      "column": "Gender",
+      "method": "mode"
+    },
+    {
+      "action": "fill_missing",
+      "column": "Married",
+      "method": "mode"
+    },
+    {
+      "action": "fill_missing",
+      "column": "Dependents",
+      "method": "mean"
+    },
+    {
+      "action": "fill_missing",
+      "column": "Self_Employed",
+      "method": "mode"
+    },
+    {
+      "action": "fill_missing",
+      "column": "LoanAmount",
+      "method": "mean"
+    },
+    {
+      "action": "fill_missing",
+      "column": "Loan_Amount_Term",
+      "method": "mean"
+    },
+    {
+      "action": "fill_missing",
+      "column": "Credit_History",
+      "method": "mean"
+    },
+    {
+      "action": "fix_dtype",
+      "column": "Dependents",
+      "target_type": "numeric"
+    },
+    {
+      "action": "cap_outliers",
+      "column": "ApplicantIncome",
+      "lower": -1000,
+      "upper": 10000
+    },
+    {
+      "action": "cap_outliers",
+      "column": "CoapplicantIncome",
+      "lower": -3000,
+      "upper": 5000
+    },
+    {
+      "action": "cap_outliers",
+      "column": "LoanAmount",
+      "lower": 0,
+      "upper": 200000
+    }
+  ],
+  "cleaning_report": {
+    "actions_applied": [
+      {
+        "action": "fill_missing",
+        "column": "Gender",
+        "method": "mode"
+      },
+      {
+        "action": "fill_missing",
+        "column": "Married",
+        "method": "mode"
+      },
+      {
+        "action": "fill_missing",
+        "column": "Self_Employed",
+        "method": "mode"
+      },
+      {
+        "action": "fill_missing",
+        "column": "LoanAmount",
+        "method": "mean"
+      },
+      {
+        "action": "fill_missing",
+        "column": "Loan_Amount_Term",
+        "method": "mean"
+      },
+      {
+        "action": "fill_missing",
+        "column": "Credit_History",
+        "method": "mean"
+      },
+      {
+        "action": "fix_dtype",
+        "column": "Dependents",
+        "target_type": "numeric"
+      },
+      {
+        "action": "cap_outliers",
+        "column": "ApplicantIncome",
+        "lower": -1000,
+        "upper": 10000
+      },
+      {
+        "action": "cap_outliers",
+        "column": "CoapplicantIncome",
+        "lower": -3000,
+        "upper": 5000
+      },
+      {
+        "action": "cap_outliers",
+        "column": "LoanAmount",
+        "lower": 0,
+        "upper": 200000
+      }
+    ],
+    "actions_skipped": [
+      {
+        "action": "fill_missing",
+        "column": "Dependents",
+        "method": "mean",
+        "reason": "Cannot perform reduction 'mean' with string dtype"
+      }
+    ],
+    "rows_before": 614,
+    "rows_after": 614,
+    "columns_before": 13,
+    "columns_after": 13,
+    "rows_removed": 0,
+    "columns_removed": 0
+  },
+  "cleaning_summary": "We cleaned your dataset with 10 improvements:\n\u2022 Filled in missing values in 'Gender'\n\u2022 Filled in missing values in 'Married'\n\u2022 Filled in missing values in 'Self_Employed'\n\u2022 Filled in missing values in 'LoanAmount'\n\u2022 Filled in missing values in 'Loan_Amount_Term'\n\u2022 Filled in missing values in 'Credit_History'\n\u2022 Fixed data type for 'Dependents'\n\u2022 Corrected extreme values in 'ApplicantIncome'\n\u2022 Corrected extreme values in 'CoapplicantIncome'\n\u2022 Corrected extreme values in 'LoanAmount'\n\u2022 1 minor fixes were skipped (already clean)",
+  "is_cleaned": true,
+  "has_embeddings": true,
+  "rag_info": {
+    "chunks_count": 45,
+    "index_path": "./datasets\\982c3a6a-6e4b-44b3-877a-c43e562d989d\\index.faiss",
+    "chunks_path": "./datasets\\982c3a6a-6e4b-44b3-877a-c43e562d989d\\chunks.pkl",
+    "embedding_dim": 256
+  }
+}

@@ -1,0 +1,228 @@
+{
+  "dataset_id": "119ec6aa-ad43-4bc9-99f0-d60a530ae906",
+  "original_filename": "diabetes.csv",
+  "status": "processing",
+  "row_count": 768,
+  "column_count": 9,
+  "columns": [
+    "Pregnancies",
+    "Glucose",
+    "BloodPressure",
+    "SkinThickness",
+    "Insulin",
+    "BMI",
+    "DiabetesPedigreeFunction",
+    "Age",
+    "Outcome"
+  ],
+  "dtypes": {
+    "Pregnancies": "int64",
+    "Glucose": "int64",
+    "BloodPressure": "int64",
+    "SkinThickness": "int64",
+    "Insulin": "int64",
+    "BMI": "float64",
+    "DiabetesPedigreeFunction": "float64",
+    "Age": "int64",
+    "Outcome": "int64"
+  },
+  "sample_rows": [
+    {
+      "Pregnancies": 6,
+      "Glucose": 148,
+      "BloodPressure": 72,
+      "SkinThickness": 35,
+      "Insulin": 0,
+      "BMI": 33.6,
+      "DiabetesPedigreeFunction": 0.627,
+      "Age": 50,
+      "Outcome": 1
+    },
+    {
+      "Pregnancies": 1,
+      "Glucose": 85,
+      "BloodPressure": 66,
+      "SkinThickness": 29,
+      "Insulin": 0,
+      "BMI": 26.6,
+      "DiabetesPedigreeFunction": 0.351,
+      "Age": 31,
+      "Outcome": 0
+    },
+    {
+      "Pregnancies": 8,
+      "Glucose": 183,
+      "BloodPressure": 64,
+      "SkinThickness": 0,
+      "Insulin": 0,
+      "BMI": 23.3,
+      "DiabetesPedigreeFunction": 0.672,
+      "Age": 32,
+      "Outcome": 1
+    },
+    {
+      "Pregnancies": 1,
+      "Glucose": 89,
+      "BloodPressure": 66,
+      "SkinThickness": 23,
+      "Insulin": 94,
+      "BMI": 28.1,
+      "DiabetesPedigreeFunction": 0.167,
+      "Age": 21,
+      "Outcome": 0
+    },
+    {
+      "Pregnancies": 0,
+      "Glucose": 137,
+      "BloodPressure": 40,
+      "SkinThickness": 35,
+      "Insulin": 168,
+      "BMI": 43.1,
+      "DiabetesPedigreeFunction": 2.288,
+      "Age": 33,
+      "Outcome": 1
+    }
+  ],
+  "domain": "healthcare",
+  "domain_details": {
+    "domain": "healthcare",
+    "sub_domain": "healthcare",
+    "confidence": 0.4,
+    "likely_questions": [
+      "What are the key trends in this dataset?",
+      "Which values are highest?",
+      "Are there any anomalies?"
+    ],
+    "key_metrics": [
+      "Pregnancies",
+      "Glucose",
+      "BloodPressure"
+    ],
+    "reasoning": "Determined by keyword matching (LLM unavailable)."
+  },
+  "profiling_report": {
+    "total_rows": 768,
+    "total_columns": 9,
+    "columns": [
+      "Pregnancies",
+      "Glucose",
+      "BloodPressure",
+      "SkinThickness",
+      "Insulin",
+      "BMI",
+      "DiabetesPedigreeFunction",
+      "Age",
+      "Outcome"
+    ],
+    "dtypes": {
+      "Pregnancies": "int64",
+      "Glucose": "int64",
+      "BloodPressure": "int64",
+      "SkinThickness": "int64",
+      "Insulin": "int64",
+      "BMI": "float64",
+      "DiabetesPedigreeFunction": "float64",
+      "Age": "int64",
+      "Outcome": "int64"
+    },
+    "missing_values": {},
+    "duplicates": {
+      "count": 0,
+      "percentage": 0.0,
+      "has_duplicates": false
+    },
+    "outliers": {
+      "Pregnancies": {
+        "count": 4,
+        "percentage": 0.52,
+        "lower_bound": -6.5,
+        "upper_bound": 13.5,
+        "min_value": 0.0,
+        "max_value": 17.0
+      },
+      "Glucose": {
+        "count": 5,
+        "percentage": 0.65,
+        "lower_bound": 37.125,
+        "upper_bound": 202.125,
+        "min_value": 0.0,
+        "max_value": 199.0
+      },
+      "BloodPressure": {
+        "count": 45,
+        "percentage": 5.86,
+        "lower_bound": 35.0,
+        "upper_bound": 107.0,
+        "min_value": 0.0,
+        "max_value": 122.0
+      },
+      "SkinThickness": {
+        "count": 1,
+        "percentage": 0.13,
+        "lower_bound": -48.0,
+        "upper_bound": 80.0,
+        "min_value": 0.0,
+        "max_value": 99.0
+      },
+      "Insulin": {
+        "count": 34,
+        "percentage": 4.43,
+        "lower_bound": -190.875,
+        "upper_bound": 318.125,
+        "min_value": 0.0,
+        "max_value": 846.0
+      },
+      "BMI": {
+        "count": 19,
+        "percentage": 2.47,
+        "lower_bound": 13.35,
+        "upper_bound": 50.55,
+        "min_value": 0.0,
+        "max_value": 67.1
+      },
+      "DiabetesPedigreeFunction": {
+        "count": 29,
+        "percentage": 3.78,
+        "lower_bound": -0.33,
+        "upper_bound": 1.2,
+        "min_value": 0.078,
+        "max_value": 2.42
+      },
+      "Age": {
+        "count": 9,
+        "percentage": 1.17,
+        "lower_bound": -1.5,
+        "upper_bound": 66.5,
+        "min_value": 21.0,
+        "max_value": 81.0
+      }
+    },
+    "type_issues": {},
+    "constant_columns": [],
+    "high_cardinality": {},
+    "quality_score": 80.0,
+    "issues_count": 8
+  },
+  "quality_score": 80.0,
+  "quality_summary": "Your data has a quality score of 80.0/100. Here's what we found:\n\u2022 Some unusual values were found in: Pregnancies, Glucose",
+  "cleaning_plan": [],
+  "cleaning_report": {
+    "actions_applied": [],
+    "actions_skipped": [],
+    "rows_before": 768,
+    "rows_after": 768,
+    "columns_before": 9,
+    "columns_after": 9,
+    "rows_removed": 0,
+    "columns_removed": 0
+  },
+  "cleaning_summary": "We cleaned your dataset with 0 improvements:",
+  "is_cleaned": true,
+  "has_embeddings": true,
+  "rag_info": {
+    "chunks_count": 49,
+    "index_path": "./datasets\\119ec6aa-ad43-4bc9-99f0-d60a530ae906\\index.faiss",
+    "chunks_path": "./datasets\\119ec6aa-ad43-4bc9-99f0-d60a530ae906\\chunks.pkl",
+    "embedding_dim": 256
+  }
+}

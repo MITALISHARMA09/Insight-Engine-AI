@@ -1,0 +1,693 @@
+{
+  "dataset_id": "bd7afee3-6b15-444b-b3ca-2f3fa07a597d",
+  "original_filename": "bi.csv",
+  "status": "processing",
+  "row_count": 77,
+  "column_count": 11,
+  "columns": [
+    "fNAME",
+    "lNAME",
+    "Age",
+    "gender",
+    "country",
+    "residence",
+    "entryEXAM",
+    "prevEducation",
+    "studyHOURS",
+    "Python",
+    "DB"
+  ],
+  "dtypes": {
+    "fNAME": "str",
+    "lNAME": "str",
+    "Age": "int64",
+    "gender": "str",
+    "country": "str",
+    "residence": "str",
+    "entryEXAM": "int64",
+    "prevEducation": "str",
+    "studyHOURS": "int64",
+    "Python": "float64",
+    "DB": "int64"
+  },
+  "sample_rows": [
+    {
+      "fNAME": "Christina",
+      "lNAME": "Binger",
+      "Age": 44,
+      "gender": "Female",
+      "country": "Norway",
+      "residence": "Private",
+      "entryEXAM": 72,
+      "prevEducation": "Masters",
+      "studyHOURS": 158,
+      "Python": 59.0,
+      "DB": 55
+    },
+    {
+      "fNAME": "Alex",
+      "lNAME": "Walekhwa",
+      "Age": 60,
+      "gender": "M",
+      "country": "Kenya",
+      "residence": "Private",
+      "entryEXAM": 79,
+      "prevEducation": "Diploma",
+      "studyHOURS": 150,
+      "Python": 60.0,
+      "DB": 75
+    },
+    {
+      "fNAME": "Philip",
+      "lNAME": "Leo",
+      "Age": 25,
+      "gender": "Male",
+      "country": "Uganda",
+      "residence": "Sognsvann",
+      "entryEXAM": 55,
+      "prevEducation": "HighSchool",
+      "studyHOURS": 130,
+      "Python": 74.0,
+      "DB": 50
+    },
+    {
+      "fNAME": "Shoni",
+      "lNAME": "Hlongwane",
+      "Age": 22,
+      "gender": "F",
+      "country": "Rsa",
+      "residence": "Sognsvann",
+      "entryEXAM": 40,
+      "prevEducation": "High School",
+      "studyHOURS": 120,
+      "Python": null,
+      "DB": 44
+    },
+    {
+      "fNAME": "Maria",
+      "lNAME": "Kedibone",
+      "Age": 23,
+      "gender": "Female",
+      "country": "South Africa",
+      "residence": "Sognsvann",
+      "entryEXAM": 65,
+      "prevEducation": "High School",
+      "studyHOURS": 122,
+      "Python": 91.0,
+      "DB": 80
+    }
+  ],
+  "domain": "education",
+  "domain_details": {
+    "domain": "education",
+    "sub_domain": "student_performance",
+    "confidence": 0.9,
+    "likely_questions": [
+      "What is the correlation between study hours and exam scores?",
+      "How do students' programming skills affect their overall performance?",
+      "What is the average age of students in the program?"
+    ],
+    "key_metrics": [
+      "average entry exam score",
+      "average study hours per week",
+      "average programming skill level"
+    ],
+    "reasoning": "The presence of columns such as entryEXAM, prevEducation, and studyHOURS suggests that the dataset is related to student performance in an educational program. The inclusion of programming skills (Python and DB) further supports this conclusion."
+  },
+  "profiling_report": {
+    "total_rows": 77,
+    "total_columns": 11,
+    "columns": [
+      "fNAME",
+      "lNAME",
+      "Age",
+      "gender",
+      "country",
+      "residence",
+      "entryEXAM",
+      "prevEducation",
+      "studyHOURS",
+      "Python",
+      "DB"
+    ],
+    "dtypes": {
+      "fNAME": "str",
+      "lNAME": "str",
+      "Age": "int64",
+      "gender": "str",
+      "country": "str",
+      "residence": "str",
+      "entryEXAM": "int64",
+      "prevEducation": "str",
+      "studyHOURS": "int64",
+      "Python": "float64",
+      "DB": "int64"
+    },
+    "missing_values": {
+      "Python": {
+        "count": 2,
+        "percentage": 2.6,
+        "dtype": "float64"
+      }
+    },
+    "duplicates": {
+      "count": 0,
+      "percentage": 0.0,
+      "has_duplicates": false
+    },
+    "outliers": {
+      "Age": {
+        "count": 2,
+        "percentage": 2.6,
+        "lower_bound": 4.5,
+        "upper_bound": 64.5,
+        "min_value": 21.0,
+        "max_value": 71.0
+      },
+      "entryEXAM": {
+        "count": 3,
+        "percentage": 3.9,
+        "lower_bound": 37.5,
+        "upper_bound": 121.5,
+        "min_value": 28.0,
+        "max_value": 98.0
+      },
+      "studyHOURS": {
+        "count": 7,
+        "percentage": 9.09,
+        "lower_bound": 123.0,
+        "upper_bound": 179.0,
+        "min_value": 114.0,
+        "max_value": 160.0
+      },
+      "Python": {
+        "count": 6,
+        "percentage": 8.0,
+        "lower_bound": 50.0,
+        "upper_bound": 106.0,
+        "min_value": 15.0,
+        "max_value": 91.0
+      }
+    },
+    "type_issues": {},
+    "constant_columns": [],
+    "high_cardinality": {
+      "fNAME": {
+        "unique_count": 71,
+        "unique_ratio": 0.922
+      },
+      "lNAME": {
+        "unique_count": 66,
+        "unique_ratio": 0.857
+      }
+    },
+    "quality_score": 87.6,
+    "issues_count": 5
+  },
+  "quality_score": 87.6,
+  "quality_summary": "Your data has a quality score of 87.6/100. Here's what we found:\n\u2022 Some entries are missing in columns like: Python\n\u2022 Some unusual values were found in: Age, entryEXAM",
+  "cleaning_plan": [
+    {
+      "action": "fill_missing",
+      "column": "Python",
+      "method": "mean"
+    },
+    {
+      "action": "fix_dtype",
+      "column": "Python",
+      "target_type": "numeric"
+    },
+    {
+      "action": "cap_outliers",
+      "column": "Age",
+      "lower": 0,
+      "upper": 100
+    },
+    {
+      "action": "cap_outliers",
+      "column": "entryEXAM",
+      "lower": 0,
+      "upper": 150
+    },
+    {
+      "action": "cap_outliers",
+      "column": "studyHOURS",
+      "lower": 0,
+      "upper": 180
+    },
+    {
+      "action": "cap_outliers",
+      "column": "Python",
+      "lower": 0,
+      "upper": 110
+    }
+  ],
+  "is_cleaned": false,
+  "cleaning_report": {},
+  "validation_report": {
+    "quality_before": 87.6,
+    "quality_after": 87.6,
+    "quality_improvement": 0.0,
+    "rows_before": 77,
+    "rows_after": 77,
+    "rows_removed": 0,
+    "cols_before": 11,
+    "cols_after": 11,
+    "cols_removed": 0,
+    "checks": [
+      {
+        "issue": "missing_values",
+        "column": "Python",
+        "count_before": 2,
+        "count_after": 2,
+        "status": "unresolved",
+        "message": "'Python' still has 2 missing values \u2014 cleaning had no effect."
+      },
+      {
+        "issue": "outliers",
+        "column": "Age",
+        "count_before": 2,
+        "count_after": 2,
+        "status": "unresolved",
+        "message": "'Age' still has 2 extreme values \u2014 outlier capping was not applied or had no effect."
+      },
+      {
+        "issue": "outliers",
+        "column": "entryEXAM",
+        "count_before": 3,
+        "count_after": 3,
+        "status": "unresolved",
+        "message": "'entryEXAM' still has 3 extreme values \u2014 outlier capping was not applied or had no effect."
+      },
+      {
+        "issue": "outliers",
+        "column": "studyHOURS",
+        "count_before": 7,
+        "count_after": 7,
+        "status": "unresolved",
+        "message": "'studyHOURS' still has 7 extreme values \u2014 outlier capping was not applied or had no effect."
+      },
+      {
+        "issue": "outliers",
+        "column": "Python",
+        "count_before": 6,
+        "count_after": 6,
+        "status": "unresolved",
+        "message": "'Python' still has 6 extreme values \u2014 outlier capping was not applied or had no effect."
+      }
+    ],
+    "per_column": [
+      {
+        "column": "residence",
+        "status": "clean",
+        "dtype_before": "str",
+        "dtype_after": "str",
+        "missing_before": 0,
+        "missing_after": 0
+      },
+      {
+        "column": "entryEXAM",
+        "status": "clean",
+        "dtype_before": "int64",
+        "dtype_after": "int64",
+        "missing_before": 0,
+        "missing_after": 0
+      },
+      {
+        "column": "studyHOURS",
+        "status": "clean",
+        "dtype_before": "int64",
+        "dtype_after": "int64",
+        "missing_before": 0,
+        "missing_after": 0
+      },
+      {
+        "column": "Python",
+        "status": "unchanged",
+        "dtype_before": "float64",
+        "dtype_after": "float64",
+        "missing_before": 2,
+        "missing_after": 2
+      },
+      {
+        "column": "Age",
+        "status": "clean",
+        "dtype_before": "int64",
+        "dtype_after": "int64",
+        "missing_before": 0,
+        "missing_after": 0
+      },
+      {
+        "column": "DB",
+        "status": "clean",
+        "dtype_before": "int64",
+        "dtype_after": "int64",
+        "missing_before": 0,
+        "missing_after": 0
+      },
+      {
+        "column": "country",
+        "status": "clean",
+        "dtype_before": "str",
+        "dtype_after": "str",
+        "missing_before": 0,
+        "missing_after": 0
+      },
+      {
+        "column": "fNAME",
+        "status": "clean",
+        "dtype_before": "str",
+        "dtype_after": "str",
+        "missing_before": 0,
+        "missing_after": 0
+      },
+      {
+        "column": "gender",
+        "status": "clean",
+        "dtype_before": "str",
+        "dtype_after": "str",
+        "missing_before": 0,
+        "missing_after": 0
+      },
+      {
+        "column": "prevEducation",
+        "status": "clean",
+        "dtype_before": "str",
+        "dtype_after": "str",
+        "missing_before": 0,
+        "missing_after": 0
+      },
+      {
+        "column": "lNAME",
+        "status": "clean",
+        "dtype_before": "str",
+        "dtype_after": "str",
+        "missing_before": 0,
+        "missing_after": 0
+      }
+    ],
+    "overall_passed": false,
+    "unresolved_count": 5,
+    "resolved_count": 0,
+    "partial_count": 0
+  },
+  "validation_summary": "Your data quality score is 87.6%. 5 issues could not be fixed automatically \u2014 check the cleaning report for details.",
+  "quality_after": 87.6,
+  "has_embeddings": true,
+  "rag_info": {
+    "chunks_count": 16,
+    "index_path": "./datasets\\bd7afee3-6b15-444b-b3ca-2f3fa07a597d\\index.faiss",
+    "chunks_path": "./datasets\\bd7afee3-6b15-444b-b3ca-2f3fa07a597d\\chunks.pkl",
+    "embedding_dim": 384
+  },
+  "dashboard": {
+    "dataset_id": "bd7afee3-6b15-444b-b3ca-2f3fa07a597d",
+    "domain": "education",
+    "tile_count": 10,
+    "tiles": [
+      {
+        "id": "kpi_shape",
+        "type": "kpi",
+        "title": "Dataset size",
+        "value": "77",
+        "unit": "rows",
+        "sub": "11 columns",
+        "color": "teal",
+        "insight": "Your dataset contains 77 rows across 11 columns. This is a good-sized dataset for meaningful analysis."
+      },
+      {
+        "id": "kpi_Age",
+        "type": "kpi",
+        "title": "Avg Age",
+        "value": "35.21",
+        "unit": "",
+        "sub": "min 21  \u00b7  max 71",
+        "color": "blue",
+        "insight": "The typical age across the dataset is 35.21. min 21  \u00b7  max 71."
+      },
+      {
+        "id": "kpi_cat_fNAME",
+        "type": "kpi",
+        "title": "Unique fNAME",
+        "value": "71",
+        "unit": "values",
+        "sub": "Top: Bj\u00f8rn",
+        "color": "purple",
+        "insight": "The typical unique fname across the dataset is 71. Top: Bj\u00f8rn."
+      },
+      {
+        "id": "kpi_missing",
+        "type": "kpi",
+        "title": "Missing values",
+        "value": "2",
+        "unit": "cells",
+        "sub": "0.2% of dataset",
+        "color": "green",
+        "insight": "All values are present \u2014 no missing data detected. Your dataset is complete and ready for analysis."
+      },
+      {
+        "id": "bar_fNAME_Age",
+        "type": "bar",
+        "title": "Avg Age by fNAME",
+        "chart_data": {
+          "labels": [
+            "Perry",
+            "Alex",
+            "Chinedu",
+            "Ola",
+            "Maximilan",
+            "Camilla",
+            "Sebastian",
+            "Jorunn",
+            "Inger",
+            "Morten"
+          ],
+          "datasets": [
+            {
+              "label": "Avg Age",
+              "data": [
+                71.0,
+                60.0,
+                52.5,
+                50.0,
+                50.0,
+                50.0,
+                48.0,
+                47.0,
+                47.0,
+                46.0
+              ]
+            }
+          ]
+        },
+        "insight": "Perry leads with the highest average age at 71.00, while Morten has the lowest at 46.00. This 25-year age gap between the top and bottom suggests that there may be significant differences in the student populations."
+      },
+      {
+        "id": "dist_Age",
+        "type": "bar",
+        "title": "Age distribution",
+        "chart_data": {
+          "labels": [
+            "21.00",
+            "31.00",
+            "41.00",
+            "51.00",
+            "61.00"
+          ],
+          "datasets": [
+            {
+              "label": "Count",
+              "data": [
+                28,
+                27,
+                19,
+                1,
+                2
+              ]
+            }
+          ]
+        },
+        "color_scheme": "teal",
+        "insight": "Most students are around 21 years old, making up 36% of the total. However, the majority of students are actually in their 40s, with 19 students in that age group. \n\nSo what: This suggests that our student body may be skewed towards older students, which could impact course planning and resource allocation."
+      },
+      {
+        "id": "pie_fNAME",
+        "type": "pie",
+        "title": "fNAME breakdown",
+        "chart_data": {
+          "labels": [
+            "Bj\u00f8rn",
+            "Emma",
+            "Odd",
+            "Grethe",
+            "Hanna",
+            "Chinedu",
+            "Christina",
+            "Alex"
+          ],
+          "datasets": [
+            {
+              "data": [
+                2,
+                2,
+                2,
+                2,
+                2,
+                2,
+                1,
+                1
+              ]
+            }
+          ]
+        },
+        "insight": "Most students have a first name that falls into one of three groups: Bj\u00f8rn, Emma, and Odd, making up 43% of the records. The remaining 57% of students have one of the other five first names, showing a relatively balanced distribution of names in the dataset."
+      },
+      {
+        "id": "correlation",
+        "type": "bar",
+        "title": "Correlation with Age",
+        "chart_data": {
+          "labels": [
+            "entryEXAM",
+            "studyHOURS",
+            "Python",
+            "DB"
+          ],
+          "datasets": [
+            {
+              "label": "r",
+              "data": [
+                0.131,
+                0.215,
+                -0.015,
+                0.099
+              ]
+            }
+          ]
+        },
+        "options": {
+          "yMin": -1,
+          "yMax": 1
+        },
+        "color_scheme": "purple",
+        "insight": "The more years of age, the more study hours students tend to have, but this relationship is quite weak. This suggests that other factors, like entry exams and programming skills, have a more significant impact on students' progress than their age."
+      },
+      {
+        "id": "missing_bar",
+        "type": "bar",
+        "title": "Missing values per column",
+        "chart_data": {
+          "labels": [
+            "Python"
+          ],
+          "datasets": [
+            {
+              "label": "Missing",
+              "data": [
+                2
+              ]
+            }
+          ]
+        },
+        "color_scheme": "danger",
+        "insight": "The majority of missing values in our education data are found in the Python column, with only 2 entries missing. Fortunately, these missing values were easily filled in during cleaning, so our analysis is unaffected. \n\nSo what, we can proceed with our analysis without worrying about missing data in this area."
+      },
+      {
+        "id": "top_Age",
+        "type": "table",
+        "title": "Top 10 by Age",
+        "columns": [
+          "fNAME",
+          "lNAME",
+          "Age",
+          "gender",
+          "country",
+          "residence"
+        ],
+        "rows": [
+          {
+            "fNAME": "Perry",
+            "lNAME": "R\u00f8nning",
+            "Age": 71,
+            "gender": "Female",
+            "country": "Norway",
+            "residence": "Private"
+          },
+          {
+            "fNAME": "Chinedu",
+            "lNAME": "Okafor",
+            "Age": 69,
+            "gender": "Male",
+            "country": "Nigeria",
+            "residence": "Private"
+          },
+          {
+            "fNAME": "Alex",
+            "lNAME": "Walekhwa",
+            "Age": 60,
+            "gender": "M",
+            "country": "Kenya",
+            "residence": "Private"
+          },
+          {
+            "fNAME": "Camilla",
+            "lNAME": "Mikkelsen",
+            "Age": 50,
+            "gender": "Female",
+            "country": "Norway",
+            "residence": "Private"
+          },
+          {
+            "fNAME": "Ola",
+            "lNAME": "Bakke",
+            "Age": 50,
+            "gender": "Female",
+            "country": "Norway",
+            "residence": "Private"
+          },
+          {
+            "fNAME": "Maximilan",
+            "lNAME": "Martini",
+            "Age": 50,
+            "gender": "Male",
+            "country": "Italy",
+            "residence": "Private"
+          },
+          {
+            "fNAME": "Sebastian",
+            "lNAME": "Kristiansen",
+            "Age": 48,
+            "gender": "Male",
+            "country": "Norway",
+            "residence": "Private"
+          },
+          {
+            "fNAME": "Jorunn",
+            "lNAME": "Eliassen",
+            "Age": 47,
+            "gender": "Female",
+            "country": "Norway",
+            "residence": "Private"
+          },
+          {
+            "fNAME": "Inger",
+            "lNAME": "Jensen",
+            "Age": 47,
+            "gender": "Male",
+            "country": "Norway",
+            "residence": "Private"
+          },
+          {
+            "fNAME": "Don",
+            "lNAME": "Pettersen",
+            "Age": 46,
+            "gender": "Male",
+            "country": "Norway",
+            "residence": "Private"
+          }
+        ],
+        "insight": "Perry tops the list with 71.00 age. Reviewing these top performers can reveal the factors behind strong results."
+      }
+    ]
+  }
+}

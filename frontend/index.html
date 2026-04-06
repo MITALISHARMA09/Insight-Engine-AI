@@ -1,0 +1,2124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>InsightEngine AI — Understand Your Data</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,500&family=IBM+Plex+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#09090F;
+  --bg2:#111118;
+  --bg3:#16161F;
+  --bg4:#1C1C28;
+  --border:#2A2A3A;
+  --border2:#363648;
+  --text:#E8E4DC;
+  --text2:#9B97A0;
+  --text3:#5C5870;
+  --accent:#00C896;
+  --accent2:#00A87E;
+  --accent-dim:rgba(0,200,150,0.08);
+  --accent-glow:rgba(0,200,150,0.2);
+  --warn:#FF8C42;
+  --danger:#FF4B6E;
+  --info:#4B9FFF;
+  --font-head:'Playfair Display',Georgia,serif;
+  --font-body:'DM Sans',system-ui,sans-serif;
+  --font-mono:'IBM Plex Mono',monospace;
+  --r:4px;
+  --r2:8px;
+  --shadow:0 0 0 1px var(--border);
+}
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--font-body);font-size:15px;line-height:1.6;overflow-x:hidden}
+#root{min-height:100vh;display:flex;flex-direction:column}
+
+/* ── Scrollbars ── */
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+
+/* ── Grid BG ── */
+.grid-bg{
+  position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);
+  background-size:48px 48px;
+  opacity:0.25;
+}
+
+/* ── Animations ── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+@keyframes scanline{0%{transform:translateY(-100%)}100%{transform:translateY(100%)}}
+@keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
+@keyframes dotPulse{0%,80%,100%{transform:scale(0.6);opacity:0.4}40%{transform:scale(1);opacity:1}}
+
+.fade-up{animation:fadeUp 0.5s ease both}
+.fade-up-1{animation:fadeUp 0.5s 0.1s ease both}
+.fade-up-2{animation:fadeUp 0.5s 0.2s ease both}
+.fade-up-3{animation:fadeUp 0.5s 0.3s ease both}
+
+/* ── Header ── */
+.header{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  height:52px;border-bottom:1px solid var(--border);
+  background:rgba(9,9,15,0.95);backdrop-filter:blur(12px);
+  display:flex;align-items:center;padding:0 24px;gap:16px;
+}
+.logo{font-family:var(--font-head);font-size:17px;font-weight:700;color:var(--text);letter-spacing:-0.3px}
+.logo span{color:var(--accent)}
+.header-badge{
+  font-family:var(--font-mono);font-size:10px;color:var(--accent);
+  border:1px solid var(--accent);padding:2px 8px;border-radius:2px;letter-spacing:1px;
+  text-transform:uppercase;
+}
+.header-right{margin-left:auto;display:flex;align-items:center;gap:12px}
+.status-dot{
+  width:6px;height:6px;border-radius:50%;
+  background:var(--accent);animation:pulse 2s infinite;
+}
+.status-text{font-family:var(--font-mono);font-size:11px;color:var(--text2)}
+.header-btn{
+  font-family:var(--font-body);font-size:13px;color:var(--text2);
+  background:none;border:1px solid var(--border);padding:5px 14px;
+  border-radius:var(--r);cursor:pointer;transition:all 0.15s;
+}
+.header-btn:hover{border-color:var(--border2);color:var(--text);background:var(--bg3)}
+
+/* ── Views ── */
+.view{flex:1;padding-top:52px;position:relative;z-index:1;min-height:100vh}
+
+
+
+/* ═══ CLEANING REPORT VIEW ═══ */
+.cr-view{max-width:860px;margin:0 auto;padding:80px 24px 60px}
+.cr-back{
+  display:inline-flex;align-items:center;gap:6px;font-size:13px;
+  color:var(--text2);background:none;border:none;cursor:pointer;
+  margin-bottom:24px;padding:0;transition:color .15s;
+}
+.cr-back:hover{color:var(--text)}
+.cr-back svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2}
+.cr-title{font-family:var(--font-head);font-size:28px;font-weight:700;color:var(--text);margin-bottom:6px}
+.cr-sub{font-size:13px;color:var(--text3);margin-bottom:32px}
+
+/* Before/After banner */
+.cr-banner{
+  display:grid;grid-template-columns:1fr auto 1fr;
+  gap:0;border:1px solid var(--border);border-radius:var(--r2);
+  overflow:hidden;margin-bottom:24px;
+}
+.cr-banner-side{padding:20px 24px;background:var(--bg2)}
+.cr-banner-arrow{
+  display:flex;align-items:center;justify-content:center;
+  padding:0 20px;background:var(--bg3);border-left:1px solid var(--border);
+  border-right:1px solid var(--border);
+}
+.cr-banner-arrow svg{width:20px;height:20px;stroke:var(--accent);fill:none;stroke-width:2}
+.cr-banner-label{font-family:var(--font-mono);font-size:10px;letter-spacing:1.5px;
+  text-transform:uppercase;color:var(--text3);margin-bottom:10px}
+.cr-banner-stat{display:flex;align-items:baseline;gap:6px;margin-bottom:4px}
+.cr-banner-num{font-family:var(--font-mono);font-size:26px;color:var(--text);font-weight:400}
+.cr-banner-unit{font-size:12px;color:var(--text3)}
+.cr-banner-num.better{color:var(--accent)}
+.cr-banner-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.cr-chip{
+  font-family:var(--font-mono);font-size:10px;padding:3px 8px;
+  border-radius:2px;border:1px solid var(--border);color:var(--text3);
+}
+.cr-chip.green{color:var(--accent);border-color:rgba(0,200,150,.3);background:rgba(0,200,150,.06)}
+.cr-chip.amber{color:var(--warn);border-color:rgba(255,140,66,.3);background:rgba(255,140,66,.06)}
+.cr-chip.red{color:var(--danger);border-color:rgba(255,75,110,.3);background:rgba(255,75,110,.06)}
+
+/* Quality bar */
+.cr-quality-wrap{margin-bottom:24px}
+.cr-quality-header{display:flex;justify-content:space-between;margin-bottom:8px;font-size:13px}
+.cr-quality-label{color:var(--text2);font-weight:500}
+.cr-quality-score{font-family:var(--font-mono);color:var(--accent)}
+.cr-quality-track{height:8px;background:var(--bg3);border-radius:4px;overflow:hidden;position:relative}
+.cr-quality-before{height:8px;border-radius:4px;background:var(--border2);position:absolute;top:0;left:0;transition:width 1s}
+.cr-quality-after{height:8px;border-radius:4px;background:var(--accent);position:absolute;top:0;left:0;transition:width 1.2s .1s}
+
+/* Section headers */
+.cr-section{margin-bottom:28px}
+.cr-section-title{
+  font-family:var(--font-mono);font-size:10px;letter-spacing:2px;
+  text-transform:uppercase;color:var(--text3);margin-bottom:12px;
+  display:flex;align-items:center;gap:8px;
+}
+.cr-section-title::after{content:'';flex:1;height:1px;background:var(--border)}
+
+/* Action log */
+.cr-log{display:flex;flex-direction:column;gap:8px}
+.cr-log-item{
+  border-radius:var(--r2);border:1px solid var(--border);background:var(--bg2);
+  overflow:hidden;
+}
+.cr-log-item.applied{border-left:3px solid var(--accent)}
+.cr-log-item.skipped{border-left:3px solid var(--border2);opacity:0.55}
+.cr-log-item.sev-red{border-left-color:var(--danger)}
+.cr-log-item.sev-amber{border-left-color:var(--warn)}
+.cr-log-header{
+  display:flex;align-items:flex-start;gap:12px;padding:12px 14px;
+  cursor:pointer;transition:background .12s;
+}
+.cr-log-header:hover{background:var(--bg3)}
+.cr-log-icon{
+  width:22px;height:22px;border-radius:50%;display:flex;align-items:center;
+  justify-content:center;flex-shrink:0;margin-top:1px;
+}
+.cr-log-icon.applied{background:rgba(0,200,150,.12)}
+.cr-log-icon.skipped{background:var(--bg3)}
+.cr-log-icon.sev-red{background:rgba(255,75,110,.1)}
+.cr-log-icon.sev-amber{background:rgba(255,140,66,.1)}
+.cr-log-icon svg{width:12px;height:12px;stroke-width:2.5;fill:none;stroke-linecap:round}
+.cr-log-icon.applied svg,.cr-log-icon.sev-red svg,.cr-log-icon.sev-amber svg{stroke:currentColor}
+.cr-log-icon.applied svg{color:var(--accent)}
+.cr-log-icon.sev-red svg{color:var(--danger)}
+.cr-log-icon.sev-amber svg{color:var(--warn)}
+.cr-log-icon.skipped svg{stroke:var(--text3)}
+.cr-log-text{flex:1;min-width:0}
+.cr-log-label{font-size:13px;font-weight:500;color:var(--text);margin-bottom:2px}
+.cr-log-detail{font-size:11px;color:var(--text3);font-family:var(--font-mono)}
+.cr-log-right{display:flex;flex-direction:column;align-items:flex-end;gap:5px;flex-shrink:0}
+.cr-log-badge{
+  font-family:var(--font-mono);font-size:9px;padding:2px 6px;border-radius:2px;
+}
+.cr-log-badge.applied{background:rgba(0,200,150,.1);color:var(--accent)}
+.cr-log-badge.skipped{background:var(--bg3);color:var(--text3)}
+.cr-sev-badge{
+  font-size:9px;font-weight:500;padding:2px 6px;border-radius:2px;
+  font-family:var(--font-mono);
+}
+.cr-sev-badge.red{background:rgba(255,75,110,.1);color:var(--danger)}
+.cr-sev-badge.amber{background:rgba(255,140,66,.1);color:var(--warn)}
+.cr-sev-badge.teal{background:rgba(0,200,150,.1);color:var(--accent)}
+.cr-expand-btn{
+  font-size:11px;color:var(--text3);display:flex;align-items:center;gap:3px;
+  background:none;border:none;cursor:pointer;padding:0;transition:color .12s;
+}
+.cr-expand-btn:hover{color:var(--text)}
+.cr-expand-btn svg{width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2;transition:transform .2s}
+.cr-expand-btn.open svg{transform:rotate(90deg)}
+.cr-why-panel{
+  display:none;padding:0 14px 14px 48px;
+}
+.cr-why-panel.open{display:block}
+.cr-why-grid{display:flex;flex-direction:column;gap:8px}
+.cr-why-block{
+  padding:10px 12px;border-radius:var(--r);background:var(--bg3);
+  border-left:2px solid var(--border2);
+}
+.cr-why-block.why-block{border-left-color:var(--info,#4B9FFF)}
+.cr-why-block.risk-block{border-left-color:var(--warn)}
+.cr-why-block.method-block{border-left-color:var(--accent)}
+.cr-why-header{
+  font-family:var(--font-mono);font-size:9px;letter-spacing:1px;
+  text-transform:uppercase;margin-bottom:5px;display:flex;align-items:center;gap:5px;
+}
+.cr-why-header svg{width:11px;height:11px;stroke:currentColor;fill:none;stroke-width:2}
+.cr-why-header.why-h{color:#4B9FFF}
+.cr-why-header.risk-h{color:var(--warn)}
+.cr-why-header.method-h{color:var(--accent)}
+.cr-why-text{font-size:12px;color:var(--text2);line-height:1.65}
+
+/* Validation checks */
+.cr-checks{display:flex;flex-direction:column;gap:6px}
+.cr-check{
+  display:flex;align-items:flex-start;gap:12px;padding:10px 14px;
+  border-radius:var(--r);border:1px solid var(--border);background:var(--bg2);
+}
+.cr-check-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:5px}
+.cr-check-dot.resolved{background:var(--accent)}
+.cr-check-dot.partial{background:var(--warn)}
+.cr-check-dot.unresolved{background:var(--danger)}
+.cr-check-dot.info{background:var(--warn)}
+.cr-check-body{flex:1}
+.cr-check-msg{font-size:13px;color:var(--text);line-height:1.5}
+.cr-check-status{
+  font-family:var(--font-mono);font-size:9px;letter-spacing:.5px;
+  text-transform:uppercase;margin-left:auto;flex-shrink:0;align-self:flex-start;
+  margin-top:3px;
+}
+.cr-check-status.resolved{color:var(--accent)}
+.cr-check-status.partial{color:var(--warn)}
+.cr-check-status.unresolved{color:var(--danger)}
+.cr-check-status.info{color:var(--warn)}
+
+/* Per-column table */
+.cr-col-table{width:100%;border-collapse:collapse;font-size:12px}
+.cr-col-table th{
+  font-family:var(--font-mono);font-size:10px;letter-spacing:.5px;text-transform:uppercase;
+  color:var(--text3);padding:8px 12px;border-bottom:1px solid var(--border);text-align:left;
+}
+.cr-col-table td{padding:8px 12px;border-bottom:1px solid var(--border);color:var(--text2)}
+.cr-col-table tr:last-child td{border-bottom:none}
+.cr-col-table tr:hover td{background:var(--bg3)}
+.cr-col-name{font-family:var(--font-mono);color:var(--text)!important}
+.status-pill{
+  display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:500;
+  padding:2px 8px;border-radius:10px;
+}
+.status-pill.improved{background:rgba(0,200,150,.1);color:var(--accent)}
+.status-pill.clean{background:var(--bg3);color:var(--text3)}
+.status-pill.partial{background:rgba(255,140,66,.1);color:var(--warn)}
+.status-pill.dropped{background:rgba(255,75,110,.08);color:var(--danger)}
+.status-pill.unchanged{background:var(--bg3);color:var(--text3)}
+.miss-val{font-family:var(--font-mono);font-size:11px}
+.miss-val.was-bad{color:var(--danger)}
+.miss-val.now-good{color:var(--accent)}
+.miss-arrow{color:var(--text3);margin:0 3px}
+
+/* Validation summary banner */
+.cr-validation-banner{
+  padding:14px 18px;border-radius:var(--r2);
+  display:flex;align-items:flex-start;gap:12px;margin-bottom:16px;
+  border:1px solid;
+}
+.cr-validation-banner.passed{border-color:rgba(0,200,150,.25);background:rgba(0,200,150,.06)}
+.cr-validation-banner.failed{border-color:rgba(255,140,66,.25);background:rgba(255,140,66,.06)}
+.cr-validation-banner svg{width:16px;height:16px;fill:none;stroke-width:2;flex-shrink:0;margin-top:1px}
+.cr-validation-banner.passed svg{stroke:var(--accent)}
+.cr-validation-banner.failed svg{stroke:var(--warn)}
+.cr-validation-banner p{font-size:13px;line-height:1.6;color:var(--text)}
+.cr-loading{
+  display:flex;align-items:center;justify-content:center;min-height:300px;
+  color:var(--text3);font-size:13px;gap:12px;flex-direction:column;
+}
+
+/* ═══ DASHBOARD VIEW ═══ */
+.dashboard-view{padding:80px 24px 48px;max-width:1100px;margin:0 auto}
+.dash-header{margin-bottom:28px}
+.dash-eyebrow{font-family:var(--font-mono);font-size:10px;letter-spacing:2px;color:var(--accent);text-transform:uppercase;margin-bottom:8px}
+.dash-title{font-family:var(--font-head);font-size:28px;font-weight:700;color:var(--text);margin-bottom:4px}
+.dash-sub{font-size:13px;color:var(--text3)}
+.dash-actions{display:flex;gap:10px;margin-top:16px}
+.dash-btn{
+  display:flex;align-items:center;gap:7px;padding:9px 18px;
+  border-radius:var(--r);font-size:13px;font-weight:500;cursor:pointer;
+  transition:all 0.15s;border:1px solid var(--border2);background:var(--bg3);color:var(--text2);
+}
+.dash-btn:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-dim)}
+.dash-btn.primary{background:var(--accent);color:#000;border-color:var(--accent)}
+.dash-btn.primary:hover{background:var(--accent2)}
+.dash-btn svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2}
+.dash-btn.primary svg{stroke:#000}
+
+.kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px}
+.kpi-card{
+  background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);
+  padding:16px 18px;position:relative;overflow:hidden;
+}
+.kpi-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+}
+.kpi-card.teal::before{background:var(--accent)}
+.kpi-card.blue::before{background:#4B9FFF}
+.kpi-card.purple::before{background:#8B7CF6}
+.kpi-card.green::before{background:#22c55e}
+.kpi-card.amber::before{background:#f59e0b}
+.kpi-card.red::before{background:var(--danger)}
+.kpi-label{font-family:var(--font-mono);font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
+.kpi-value{font-family:var(--font-mono);font-size:28px;font-weight:400;color:var(--text);line-height:1;margin-bottom:2px}
+.kpi-unit{font-family:var(--font-mono);font-size:12px;color:var(--text3);display:inline;margin-left:4px}
+.kpi-sub{font-size:11px;color:var(--text3);margin-top:6px}
+.kpi-value.teal{color:var(--accent)}
+.kpi-value.blue{color:#4B9FFF}
+.kpi-value.purple{color:#8B7CF6}
+.kpi-value.green{color:#22c55e}
+.kpi-value.amber{color:#f59e0b}
+.kpi-value.red{color:var(--danger)}
+
+.charts-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-bottom:24px}
+.chart-card{
+  background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);
+  padding:20px;
+}
+.chart-card.wide{grid-column:span 2}
+.chart-title{font-size:13px;font-weight:500;color:var(--text);margin-bottom:16px}
+.chart-canvas-wrap{position:relative;height:220px}
+
+.dash-table-wrap{overflow-x:auto;margin-top:4px;max-height:260px;overflow-y:auto}
+.dash-table{width:100%;border-collapse:collapse;font-size:12px}
+.dash-table th{
+  font-family:var(--font-mono);font-size:10px;letter-spacing:.5px;text-transform:uppercase;
+  color:var(--text3);padding:8px 10px;border-bottom:1px solid var(--border);
+  background:var(--bg3);position:sticky;top:0;text-align:left;white-space:nowrap;
+}
+.dash-table td{
+  padding:7px 10px;border-bottom:1px solid var(--border);
+  color:var(--text2);white-space:nowrap;font-family:var(--font-mono);
+}
+.dash-table tr:hover td{background:var(--bg3)}
+.dash-table tr:last-child td{border-bottom:none}
+
+
+.chart-insight{
+  margin-top:14px;padding:10px 14px;
+  background:var(--bg3);border-left:2px solid var(--accent);border-radius:0 var(--r) var(--r) 0;
+  font-size:12px;color:var(--text2);line-height:1.65;
+}
+.chart-insight-icon{
+  display:inline-flex;align-items:center;gap:5px;
+  font-family:var(--font-mono);font-size:9px;letter-spacing:1px;
+  color:var(--accent);text-transform:uppercase;margin-bottom:5px;
+}
+.chart-insight-icon svg{width:11px;height:11px;stroke:var(--accent);fill:none;stroke-width:2}
+.kpi-insight{
+  margin-top:8px;font-size:11px;color:var(--text3);line-height:1.55;
+  padding-top:8px;border-top:1px solid var(--border);
+}
+
+.dash-loading{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  min-height:400px;gap:16px;color:var(--text3);font-size:13px;
+}
+.dash-spinner{
+  width:32px;height:32px;border:2px solid var(--border);
+  border-top-color:var(--accent);border-radius:50%;animation:spin 0.8s linear infinite;
+}
+
+@media(max-width:700px){
+  .kpi-row{grid-template-columns:repeat(2,1fr)}
+  .charts-grid{grid-template-columns:1fr}
+  .chart-card.wide{grid-column:span 1}
+}
+
+/* ═══ UPLOAD VIEW ═══ */
+.upload-view{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:80px 24px 60px;min-height:100vh}
+.upload-eyebrow{
+  font-family:var(--font-mono);font-size:11px;letter-spacing:2px;
+  text-transform:uppercase;color:var(--accent);margin-bottom:24px;
+}
+.upload-title{
+  font-family:var(--font-head);font-size:clamp(36px,6vw,68px);
+  font-weight:700;line-height:1.05;text-align:center;
+  max-width:700px;margin-bottom:20px;letter-spacing:-1px;
+}
+.upload-title em{font-style:italic;color:var(--accent)}
+.upload-subtitle{
+  font-size:16px;color:var(--text2);text-align:center;
+  max-width:480px;margin-bottom:52px;line-height:1.65;
+}
+
+/* Drop zone */
+.dropzone{
+  width:min(580px,100%);
+  border:1.5px dashed var(--border2);
+  border-radius:var(--r2);
+  padding:52px 40px;
+  display:flex;flex-direction:column;align-items:center;gap:16px;
+  background:var(--bg2);
+  transition:all 0.2s;cursor:pointer;position:relative;overflow:hidden;
+}
+.dropzone::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--accent),transparent);
+  opacity:0;transition:opacity 0.3s;
+}
+.dropzone:hover,
+.dropzone.drag-over{
+  border-color:var(--accent);background:var(--accent-dim);
+}
+.dropzone:hover::before,
+.dropzone.drag-over::before{opacity:1}
+
+.dropzone-icon{
+  width:56px;height:56px;border:1px solid var(--border2);border-radius:var(--r2);
+  display:flex;align-items:center;justify-content:center;
+  background:var(--bg3);margin-bottom:4px;
+}
+.dropzone-icon svg{width:24px;height:24px;stroke:var(--accent);fill:none;stroke-width:1.5}
+.dropzone-title{font-size:15px;font-weight:500;color:var(--text)}
+.dropzone-sub{font-size:13px;color:var(--text3)}
+.dropzone-formats{
+  display:flex;gap:8px;margin-top:4px;
+}
+.format-tag{
+  font-family:var(--font-mono);font-size:10px;
+  border:1px solid var(--border);color:var(--text3);
+  padding:3px 8px;border-radius:2px;letter-spacing:1px;
+}
+.file-input{position:absolute;inset:0;opacity:0;cursor:pointer}
+
+/* Upload progress */
+.upload-progress-wrap{width:min(580px,100%);margin-top:0}
+.selected-file{
+  background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);
+  padding:16px 20px;display:flex;align-items:center;gap:16px;
+}
+.file-icon{
+  width:40px;height:40px;background:var(--accent-dim);border:1px solid var(--accent-glow);
+  border-radius:var(--r);display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.file-icon svg{width:18px;height:18px;stroke:var(--accent);fill:none;stroke-width:1.5}
+.file-info{flex:1;min-width:0}
+.file-name{font-size:14px;font-weight:500;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.file-size{font-family:var(--font-mono);font-size:11px;color:var(--text3);margin-top:2px}
+.upload-btn{
+  background:var(--accent);color:#000;font-weight:500;font-size:14px;
+  border:none;padding:10px 24px;border-radius:var(--r);cursor:pointer;
+  transition:all 0.15s;white-space:nowrap;flex-shrink:0;
+}
+.upload-btn:hover{background:var(--accent2)}
+.upload-btn:disabled{opacity:0.5;cursor:not-allowed}
+.progress-bar-wrap{margin-top:12px;background:var(--bg3);height:2px;border-radius:1px;overflow:hidden}
+.progress-bar{height:2px;background:var(--accent);width:0%;transition:width 0.4s;border-radius:1px}
+
+.error-box{
+  width:min(580px,100%);background:rgba(255,75,110,0.08);
+  border:1px solid rgba(255,75,110,0.3);border-radius:var(--r2);
+  padding:14px 18px;display:flex;gap:12px;align-items:flex-start;margin-top:16px;
+}
+.error-box svg{width:16px;height:16px;stroke:var(--danger);flex-shrink:0;margin-top:2px;fill:none;stroke-width:2}
+.error-box p{font-size:13px;color:var(--danger);line-height:1.5}
+
+/* Features grid */
+.features{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:1px;
+  width:min(700px,100%);margin-top:64px;
+  border:1px solid var(--border);border-radius:var(--r2);overflow:hidden;
+}
+.feature{background:var(--bg2);padding:24px;border-right:1px solid var(--border)}
+.feature:last-child{border-right:none}
+.feature-num{font-family:var(--font-mono);font-size:11px;color:var(--text3);margin-bottom:10px}
+.feature-title{font-size:14px;font-weight:500;color:var(--text);margin-bottom:6px}
+.feature-desc{font-size:12px;color:var(--text3);line-height:1.6}
+
+/* ═══ PROCESSING VIEW ═══ */
+.processing-view{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:80px 24px}
+.processing-card{
+  width:min(520px,100%);
+  background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);
+  overflow:hidden;
+}
+.processing-header{
+  padding:28px 32px 24px;border-bottom:1px solid var(--border);
+}
+.processing-eyebrow{font-family:var(--font-mono);font-size:10px;letter-spacing:2px;color:var(--accent);text-transform:uppercase;margin-bottom:10px}
+.processing-title{font-family:var(--font-head);font-size:24px;font-weight:700;color:var(--text)}
+.processing-file{font-family:var(--font-mono);font-size:12px;color:var(--text3);margin-top:8px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+.pipeline{padding:24px 32px;display:flex;flex-direction:column;gap:0}
+.pipeline-step{display:flex;gap:16px;padding-bottom:4px;position:relative}
+.pipeline-step:not(:last-child)::after{
+  content:'';position:absolute;left:15px;top:32px;bottom:0;
+  width:1px;background:var(--border);
+}
+.step-icon{
+  width:32px;height:32px;border-radius:50%;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  border:1px solid var(--border);background:var(--bg3);
+  position:relative;z-index:1;transition:all 0.4s;
+}
+.step-icon.done{border-color:var(--accent);background:var(--accent-dim)}
+.step-icon.active{border-color:var(--accent);animation:pulse 1.5s infinite}
+.step-icon.pending{opacity:0.4}
+.step-icon svg{width:14px;height:14px;fill:none;stroke-width:2}
+.step-icon.done svg{stroke:var(--accent)}
+.step-icon.active svg{stroke:var(--accent)}
+.step-icon.pending svg{stroke:var(--text3)}
+.step-check{stroke:var(--accent);stroke-width:2.5}
+.step-spinner{animation:spin 1s linear infinite;stroke:var(--accent);stroke-width:2;stroke-linecap:round;stroke-dasharray:32;stroke-dashoffset:8}
+
+.step-body{padding:5px 0 24px;flex:1}
+.step-label{font-size:13px;font-weight:500;color:var(--text);line-height:1}
+.step-label.pending{color:var(--text3)}
+.step-detail{font-family:var(--font-mono);font-size:11px;color:var(--text3);margin-top:4px}
+
+.processing-footer{padding:20px 32px;border-top:1px solid var(--border);background:var(--bg3)}
+.progress-info{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.progress-label{font-family:var(--font-mono);font-size:11px;color:var(--text3)}
+.progress-pct{font-family:var(--font-mono);font-size:11px;color:var(--accent)}
+
+/* ═══ CHAT VIEW ═══ */
+.chat-view{display:grid;grid-template-columns:280px 1fr 300px;height:calc(100vh - 52px);overflow:hidden}
+
+/* Left sidebar */
+.sidebar-left{
+  border-right:1px solid var(--border);background:var(--bg2);
+  display:flex;flex-direction:column;overflow:hidden;
+}
+.sidebar-section{padding:20px;border-bottom:1px solid var(--border)}
+.sidebar-label{font-family:var(--font-mono);font-size:10px;letter-spacing:1.5px;color:var(--text3);text-transform:uppercase;margin-bottom:12px}
+.dataset-name{font-size:14px;font-weight:500;color:var(--text);line-height:1.3;margin-bottom:8px;word-break:break-word}
+.dataset-meta{display:flex;flex-wrap:wrap;gap:6px}
+.meta-chip{
+  font-family:var(--font-mono);font-size:10px;
+  background:var(--bg3);border:1px solid var(--border);
+  color:var(--text2);padding:3px 8px;border-radius:2px;
+}
+.meta-chip.accent{color:var(--accent);border-color:var(--accent-glow);background:var(--accent-dim)}
+
+.domain-card{
+  background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);
+  padding:12px;
+}
+.domain-label{font-family:var(--font-mono);font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
+.domain-value{font-size:15px;font-weight:500;color:var(--accent);text-transform:capitalize}
+.quality-bar-wrap{margin-top:10px}
+.quality-label{font-size:11px;color:var(--text3);margin-bottom:4px;display:flex;justify-content:space-between}
+.quality-track{height:3px;background:var(--bg4);border-radius:2px;overflow:hidden}
+.quality-fill{height:3px;border-radius:2px;background:var(--accent);transition:width 1s}
+
+.columns-list{flex:1;overflow-y:auto;padding:16px 20px;display:flex;flex-direction:column;gap:4px}
+.col-item{
+  display:flex;align-items:center;gap:8px;padding:6px 10px;
+  border-radius:var(--r);cursor:default;transition:background 0.1s;
+}
+.col-item:hover{background:var(--bg3)}
+.col-type{
+  font-family:var(--font-mono);font-size:9px;padding:2px 5px;
+  border-radius:2px;flex-shrink:0;letter-spacing:0.5px;font-weight:500;
+}
+.col-type.num{background:rgba(75,159,255,0.12);color:#4B9FFF}
+.col-type.str{background:rgba(255,140,66,0.12);color:var(--warn)}
+.col-type.dt{background:rgba(0,200,150,0.12);color:var(--accent)}
+.col-name{font-size:12px;color:var(--text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* Suggested questions */
+.suggestions{padding:16px 20px;border-top:1px solid var(--border);display:flex;flex-direction:column;gap:6px}
+.suggestion-btn{
+  background:none;border:1px solid var(--border);border-radius:var(--r);
+  padding:8px 10px;text-align:left;cursor:pointer;color:var(--text2);
+  font-size:12px;font-family:var(--font-body);line-height:1.4;
+  transition:all 0.15s;
+}
+.suggestion-btn:hover{border-color:var(--accent);color:var(--text);background:var(--accent-dim)}
+
+/* Main chat area */
+.chat-main{display:flex;flex-direction:column;background:var(--bg);overflow:hidden}
+.messages-area{flex:1;overflow-y:auto;padding:24px;display:flex;flex-direction:column;gap:20px}
+.messages-empty{
+  flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:16px;padding:40px;
+}
+.empty-glyph{
+  font-family:var(--font-head);font-size:72px;color:var(--bg3);font-weight:700;
+  font-style:italic;user-select:none;
+}
+.empty-title{font-family:var(--font-head);font-size:22px;color:var(--text2);font-weight:500}
+.empty-sub{font-size:13px;color:var(--text3);text-align:center;max-width:320px;line-height:1.6}
+
+/* Messages */
+.msg{display:flex;gap:12px;animation:fadeUp 0.3s ease}
+.msg-avatar{
+  width:30px;height:30px;border-radius:50%;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;margin-top:2px;
+}
+.msg-avatar.user{background:var(--bg3);border:1px solid var(--border)}
+.msg-avatar.ai{background:var(--accent-dim);border:1px solid var(--accent-glow)}
+.msg-avatar svg{width:14px;height:14px;fill:none;stroke-width:1.5}
+.msg-avatar.user svg{stroke:var(--text2)}
+.msg-avatar.ai svg{stroke:var(--accent)}
+
+.msg-content{flex:1;max-width:680px}
+.msg-header{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.msg-name{font-size:12px;font-weight:500;color:var(--text)}
+.msg-time{font-family:var(--font-mono);font-size:10px;color:var(--text3)}
+.msg-bubble{
+  background:var(--bg2);border:1px solid var(--border);
+  border-radius:var(--r) var(--r2) var(--r2) var(--r2);
+  padding:14px 16px;font-size:14px;line-height:1.7;color:var(--text);
+}
+.msg.user .msg-bubble{
+  background:var(--bg3);border-color:var(--border2);
+  border-radius:var(--r2) var(--r) var(--r2) var(--r2);
+}
+.msg-story{font-size:14px;line-height:1.75;color:var(--text)}
+
+/* Result card */
+.result-card{
+  margin-top:12px;background:var(--bg3);border:1px solid var(--border);
+  border-radius:var(--r2);overflow:hidden;
+}
+.result-header{
+  padding:10px 14px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:8px;
+}
+.result-type{font-family:var(--font-mono);font-size:10px;letter-spacing:1px;color:var(--text3);text-transform:uppercase}
+.result-time{font-family:var(--font-mono);font-size:10px;color:var(--text3);margin-left:auto}
+.result-body{padding:14px}
+
+/* Number result */
+.number-result{
+  font-family:var(--font-mono);font-size:32px;font-weight:400;color:var(--accent);
+  line-height:1;
+}
+.number-result-label{font-size:12px;color:var(--text3);margin-top:6px}
+
+/* Table result */
+.data-table-wrap{overflow-x:auto;max-height:240px;overflow-y:auto}
+table.data-table{width:100%;border-collapse:collapse;font-size:12px}
+table.data-table th{
+  font-family:var(--font-mono);font-size:10px;letter-spacing:0.5px;
+  text-transform:uppercase;color:var(--text3);padding:8px 10px;
+  border-bottom:1px solid var(--border);background:var(--bg4);
+  position:sticky;top:0;text-align:left;
+}
+table.data-table td{
+  padding:8px 10px;border-bottom:1px solid var(--border);
+  color:var(--text2);font-family:var(--font-mono);white-space:nowrap;
+}
+table.data-table tr:hover td{background:var(--bg4)}
+table.data-table tr:last-child td{border-bottom:none}
+
+/* Text result */
+.text-result{font-family:var(--font-mono);font-size:13px;color:var(--text2);line-height:1.6;word-break:break-word}
+
+/* Dict/List result */
+.dict-result{display:flex;flex-direction:column;gap:4px}
+.dict-row{display:flex;gap:8px;align-items:baseline;padding:4px 0;border-bottom:1px solid var(--border)}
+.dict-row:last-child{border-bottom:none}
+.dict-key{font-family:var(--font-mono);font-size:11px;color:var(--text3);min-width:120px;flex-shrink:0;text-overflow:ellipsis;overflow:hidden}
+.dict-val{font-family:var(--font-mono);font-size:12px;color:var(--text);word-break:break-all}
+
+/* Typing indicator */
+.typing-dots{display:flex;gap:4px;align-items:center;padding:4px 0}
+.typing-dot{width:6px;height:6px;border-radius:50%;background:var(--accent);animation:dotPulse 1.2s ease infinite}
+.typing-dot:nth-child(2){animation-delay:0.2s}
+.typing-dot:nth-child(3){animation-delay:0.4s}
+
+/* Error message */
+.msg-error{
+  background:rgba(255,75,110,0.06);border:1px solid rgba(255,75,110,0.2);
+  border-radius:var(--r2);padding:12px 14px;font-size:13px;color:var(--danger);line-height:1.5;
+}
+
+/* Input area */
+.input-area{
+  border-top:1px solid var(--border);background:var(--bg2);padding:20px 24px;
+}
+.input-form{
+  display:flex;gap:10px;align-items:flex-end;
+  background:var(--bg3);border:1px solid var(--border);border-radius:var(--r2);
+  padding:12px 16px;transition:border-color 0.15s;
+}
+.input-form:focus-within{border-color:var(--border2)}
+.input-textarea{
+  flex:1;background:none;border:none;outline:none;resize:none;
+  font-family:var(--font-body);font-size:14px;color:var(--text);
+  line-height:1.5;max-height:120px;min-height:22px;
+}
+.input-textarea::placeholder{color:var(--text3)}
+.send-btn{
+  width:34px;height:34px;background:var(--accent);border:none;
+  border-radius:var(--r);cursor:pointer;display:flex;align-items:center;
+  justify-content:center;flex-shrink:0;transition:all 0.15s;
+}
+.send-btn:hover{background:var(--accent2)}
+.send-btn:disabled{opacity:0.4;cursor:not-allowed}
+.send-btn svg{width:16px;height:16px;fill:none;stroke:#000;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}
+
+/* Right sidebar */
+.sidebar-right{
+  border-left:1px solid var(--border);background:var(--bg2);
+  display:flex;flex-direction:column;overflow:hidden;
+}
+.preview-tabs{display:flex;border-bottom:1px solid var(--border)}
+.preview-tab{
+  flex:1;padding:12px;font-size:12px;font-weight:500;color:var(--text3);
+  background:none;border:none;cursor:pointer;border-bottom:2px solid transparent;
+  transition:all 0.15s;
+}
+.preview-tab.active{color:var(--accent);border-bottom-color:var(--accent)}
+.preview-tab:hover{color:var(--text);background:var(--bg3)}
+.preview-content{flex:1;overflow:auto;padding:16px}
+
+/* History list */
+.history-list{display:flex;flex-direction:column;gap:1px;overflow-y:auto;flex:1}
+.history-item{
+  padding:12px 16px;border-bottom:1px solid var(--border);cursor:pointer;
+  transition:background 0.1s;
+}
+.history-item:hover{background:var(--bg3)}
+.history-q{font-size:12px;color:var(--text);line-height:1.4;margin-bottom:4px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.history-meta{font-family:var(--font-mono);font-size:10px;color:var(--text3);display:flex;gap:8px;align-items:center}
+.history-ok{color:var(--accent)}
+.history-fail{color:var(--danger)}
+
+/* Stats card */
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:16px}
+.stat-card{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:12px}
+.stat-val{font-family:var(--font-mono);font-size:18px;color:var(--text);font-weight:400}
+.stat-label{font-size:11px;color:var(--text3);margin-top:2px}
+
+
+.download-row{display:flex;gap:8px;margin:0 20px 16px;align-items:center}
+.dl-btn{
+  flex:1;display:flex;align-items:center;justify-content:center;gap:7px;
+  padding:10px 14px;border-radius:var(--r);font-size:13px;font-weight:500;
+  cursor:pointer;transition:all 0.15s;border:1px solid var(--border2);
+  background:var(--bg3);color:var(--text2);text-decoration:none;
+}
+.dl-btn:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-dim)}
+.dl-btn svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;flex-shrink:0}
+.dl-label{font-family:var(--font-mono);font-size:9px;letter-spacing:1px;
+  text-transform:uppercase;color:var(--text3);padding:0 20px 6px;display:block}
+.sidebar-dl{padding:0 20px 16px;display:flex;gap:6px}
+.sidebar-dl-btn{
+  flex:1;display:flex;align-items:center;justify-content:center;gap:5px;
+  padding:7px 10px;border-radius:var(--r);font-size:11px;font-weight:500;
+  cursor:pointer;border:1px solid var(--border);background:var(--bg3);
+  color:var(--text3);text-decoration:none;transition:all 0.15s;
+}
+.sidebar-dl-btn:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-dim)}
+.sidebar-dl-btn svg{width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2;flex-shrink:0}
+
+/* New analysis button */
+.new-btn{
+  margin:12px;background:none;border:1px dashed var(--border);
+  border-radius:var(--r);padding:10px;color:var(--text3);font-size:12px;
+  cursor:pointer;transition:all 0.15s;display:flex;align-items:center;justify-content:center;gap:6px;
+}
+.new-btn:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-dim)}
+
+/* Toast */
+.toast{
+  position:fixed;bottom:24px;right:24px;z-index:999;
+  background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);
+  padding:14px 18px;font-size:13px;color:var(--text);
+  box-shadow:0 8px 32px rgba(0,0,0,0.4);animation:fadeUp 0.3s ease;
+  display:flex;gap:10px;align-items:center;max-width:340px;
+}
+.toast.success{border-color:var(--accent-glow);color:var(--accent)}
+.toast.error{border-color:rgba(255,75,110,0.3);color:var(--danger)}
+
+/* Upload quality summary card */
+.quality-summary{
+  width:min(580px,100%);margin-top:20px;
+  background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);
+  overflow:hidden;
+}
+.quality-summary-header{
+  padding:14px 20px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.quality-summary-header h4{font-size:13px;font-weight:500;color:var(--text)}
+.quality-summary-body{padding:14px 20px;font-size:13px;color:var(--text2);line-height:1.7}
+.start-btn{
+  margin:16px 20px;width:calc(100% - 40px);
+  background:var(--accent);color:#000;font-weight:500;font-size:14px;
+  border:none;padding:12px;border-radius:var(--r);cursor:pointer;
+  transition:all 0.15s;display:flex;align-items:center;justify-content:center;gap:8px;
+}
+.start-btn:hover{background:var(--accent2)}
+.start-btn svg{width:16px;height:16px;fill:none;stroke:#000;stroke-width:2.5}
+
+@media(max-width:900px){
+  .chat-view{grid-template-columns:1fr}
+  .sidebar-left,.sidebar-right{display:none}
+  .features{grid-template-columns:1fr}
+  .feature{border-right:none;border-bottom:1px solid var(--border)}
+}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+<div class="grid-bg"></div>
+<div id="root"></div>
+
+<script>
+// ─── State ───────────────────────────────────────────────────────────────────
+const API = 'http://localhost:8000/api/v1';
+let state = {
+  view: 'upload',        // upload | processing | done | chat
+  file: null,
+  uploading: false,
+  uploadProgress: 0,
+  uploadResult: null,
+  uploadError: null,
+  dataset: null,
+  messages: [],
+  querying: false,
+  history: [],
+  previewData: null,
+  previewTab: 'stats',   // stats | preview | history
+  toast: null,
+};
+
+// ─── Render ──────────────────────────────────────────────────────────────────
+function render() {
+  const root = document.getElementById('root');
+  root.innerHTML = `
+    ${renderHeader()}
+    <div class="view">
+      ${state.view === 'upload'     ? renderUpload()     : ''}
+      ${state.view === 'processing' ? renderProcessing() : ''}
+      ${state.view === 'done'       ? renderDone()       : ''}
+      ${state.view === 'dashboard'  ? renderDashboard()  : ''}
+      ${state.view === 'cleaning'   ? renderCleaning()   : ''}
+      ${state.view === 'chat'       ? renderChat()       : ''}
+    </div>
+    ${state.toast ? renderToast() : ''}
+  `;
+  attachEvents();
+}
+
+// ─── Header ──────────────────────────────────────────────────────────────────
+function renderHeader() {
+  const inChat = state.view === 'chat';
+  return `
+  <header class="header">
+    <div class="logo">Insight<span>Engine</span></div>
+    <div class="header-badge">AI</div>
+    <div class="header-right">
+      ${inChat ? `
+        <span class="status-text">${escHtml(state.dataset?.original_filename || '')}</span>
+        <div class="status-dot"></div>
+      ` : `
+        <div class="status-dot"></div>
+        <span class="status-text">SYSTEM READY</span>
+      `}
+      ${inChat ? `<button class="header-btn" id="btn-new-upload">New Dataset</button>` : ''}
+    </div>
+  </header>`;
+}
+
+// ─── Upload View ─────────────────────────────────────────────────────────────
+function renderUpload() {
+  return `
+  <div class="upload-view">
+    <p class="upload-eyebrow fade-up">DATA INTELLIGENCE PLATFORM</p>
+    <h1 class="upload-title fade-up-1">
+      Talk to your data<br/><em>in plain English</em>
+    </h1>
+    <p class="upload-subtitle fade-up-2">
+      Upload any CSV or Excel file. Our AI cleans it, understands it,
+      and answers your questions — no formulas, no code.
+    </p>
+
+    ${!state.file ? `
+    <div class="dropzone fade-up-3" id="dropzone">
+      <input type="file" class="file-input" id="file-input" accept=".csv,.xlsx,.xls"/>
+      <div class="dropzone-icon">
+        <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+      </div>
+      <p class="dropzone-title">Drop your dataset here</p>
+      <p class="dropzone-sub">or click to browse files</p>
+      <div class="dropzone-formats">
+        <span class="format-tag">CSV</span>
+        <span class="format-tag">XLSX</span>
+        <span class="format-tag">XLS</span>
+        <span class="format-tag">MAX 50MB</span>
+      </div>
+    </div>
+    ` : `
+    <div class="upload-progress-wrap fade-up-3">
+      <div class="selected-file">
+        <div class="file-icon">
+          <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        </div>
+        <div class="file-info">
+          <div class="file-name">${escHtml(state.file.name)}</div>
+          <div class="file-size">${formatBytes(state.file.size)}</div>
+        </div>
+        ${!state.uploading ? `
+          <button class="upload-btn" id="btn-upload">
+            Analyse →
+          </button>
+        ` : `
+          <button class="upload-btn" disabled>Processing…</button>
+        `}
+      </div>
+      ${state.uploading ? `
+        <div class="progress-bar-wrap">
+          <div class="progress-bar" style="width:${state.uploadProgress}%"></div>
+        </div>
+      ` : ''}
+    </div>
+    `}
+
+    ${state.uploadError ? `
+    <div class="error-box fade-up">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <p>${escHtml(state.uploadError)}</p>
+    </div>
+    ` : ''}
+
+    <div class="features fade-up-3">
+      <div class="feature">
+        <div class="feature-num">01</div>
+        <div class="feature-title">Auto-clean</div>
+        <div class="feature-desc">Missing values, duplicates, and type errors fixed automatically.</div>
+      </div>
+      <div class="feature">
+        <div class="feature-num">02</div>
+        <div class="feature-title">Smart analysis</div>
+        <div class="feature-desc">Multi-agent AI generates and validates pandas code in parallel.</div>
+      </div>
+      <div class="feature">
+        <div class="feature-num">03</div>
+        <div class="feature-title">Plain answers</div>
+        <div class="feature-desc">Results explained like a business analyst, not a data scientist.</div>
+      </div>
+    </div>
+  </div>`;
+}
+
+// ─── Processing View ──────────────────────────────────────────────────────────
+const PIPELINE_STEPS = [
+  { key:'parse',   label:'Reading your file',        icon:'file'   },
+  { key:'domain',  label:'Detecting dataset domain',  icon:'brain'  },
+  { key:'profile', label:'Profiling data quality',    icon:'scan'   },
+  { key:'clean',   label:'AI cleaning plan',          icon:'magic'  },
+  { key:'execute', label:'Applying fixes',            icon:'wrench' },
+  { key:'embed',   label:'Building search index',     icon:'index'  },
+];
+
+function renderProcessing() {
+  const activeIdx = state.processingStep || 0;
+  return `
+  <div class="processing-view">
+    <div class="processing-card fade-up">
+      <div class="processing-header">
+        <div class="processing-eyebrow">PIPELINE RUNNING</div>
+        <div class="processing-title">Preparing your dataset</div>
+        <div class="processing-file">${escHtml(state.file?.name || '')}</div>
+      </div>
+
+      <div class="pipeline">
+        ${PIPELINE_STEPS.map((step, i) => {
+          const status = i < activeIdx ? 'done' : i === activeIdx ? 'active' : 'pending';
+          return `
+          <div class="pipeline-step">
+            <div class="step-icon ${status}">
+              ${status === 'done'
+                ? `<svg viewBox="0 0 24 24"><polyline class="step-check" points="20 6 9 17 4 12"/></svg>`
+                : status === 'active'
+                ? `<svg viewBox="0 0 24 24"><circle class="step-spinner" cx="12" cy="12" r="10" fill="none"/></svg>`
+                : `<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3" fill="currentColor" stroke="none"/></svg>`
+              }
+            </div>
+            <div class="step-body">
+              <div class="step-label ${status}">${step.label}</div>
+              ${status === 'active' ? `<div class="step-detail">In progress…</div>` : ''}
+              ${status === 'done' ? `<div class="step-detail">Complete</div>` : ''}
+            </div>
+          </div>`;
+        }).join('')}
+      </div>
+
+      <div class="processing-footer">
+        <div class="progress-info">
+          <span class="progress-label">Overall progress</span>
+          <span class="progress-pct">${Math.round((activeIdx / PIPELINE_STEPS.length) * 100)}%</span>
+        </div>
+        <div class="progress-bar-wrap">
+          <div class="progress-bar" style="width:${Math.round((activeIdx / PIPELINE_STEPS.length) * 100)}%"></div>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+// ─── Done / Success Preview View ──────────────────────────────────────────────
+function renderDone() {
+  const r = state.uploadResult;
+  if (!r) return '';
+  return `
+  <div class="upload-view">
+    <p class="upload-eyebrow fade-up" style="color:var(--accent)">✓ READY</p>
+    <h1 class="upload-title fade-up-1" style="font-size:clamp(28px,4vw,48px)">
+      Your data is prepared
+    </h1>
+
+    <div class="quality-summary fade-up-2">
+      <div class="quality-summary-header">
+        <h4>Dataset overview</h4>
+        <div style="display:flex;gap:8px">
+          <span class="meta-chip accent">${escHtml(r.domain)}</span>
+          <span class="meta-chip">${r.row_count?.toLocaleString()} rows</span>
+          <span class="meta-chip">${r.column_count} columns</span>
+        </div>
+      </div>
+      <div class="quality-summary-body">
+        <div style="margin-bottom:12px">
+          <div class="quality-label" style="display:flex;justify-content:space-between;font-size:12px;color:var(--text3);margin-bottom:6px">
+            <span>Data quality score</span>
+            <span style="color:var(--accent);font-family:var(--font-mono)">${r.quality_score}/100</span>
+          </div>
+          <div class="quality-track"><div class="quality-fill" style="width:${r.quality_score}%"></div></div>
+        </div>
+        <p>${escHtml(r.quality_summary)}</p>
+        ${r.cleaning_summary ? `<p style="margin-top:10px;color:var(--text3);font-size:12px">${escHtml(r.cleaning_summary)}</p>` : ''}
+      </div>
+      <button class="start-btn" id="btn-view-dashboard">
+        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        View auto dashboard
+      </button>
+      <span class="dl-label">Download cleaned file</span>
+      <div class="download-row">
+        <a class="dl-btn" id="dl-csv-done" href="#" download>
+          <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Download CSV
+        </a>
+        <a class="dl-btn" id="dl-xlsx-done" href="#" download>
+          <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+          Download Excel
+        </a>
+      </div>
+    </div>
+  </div>`;
+}
+
+// ─── Chat View ────────────────────────────────────────────────────────────────
+function renderChat() {
+  const r = state.dataset;
+  if (!r) return '';
+  const cols = r.columns || [];
+
+  return `
+  <div class="chat-view">
+    <!-- Left Sidebar -->
+    <aside class="sidebar-left">
+      <div class="sidebar-section">
+        <div class="sidebar-label">Dataset</div>
+        <div class="dataset-name">${escHtml(r.original_filename)}</div>
+        <div class="dataset-meta">
+          <span class="meta-chip accent">${escHtml(r.domain || 'general')}</span>
+          <span class="meta-chip">${(r.row_count||0).toLocaleString()} rows</span>
+          <span class="meta-chip">${r.column_count || cols.length} cols</span>
+        </div>
+      </div>
+
+      <div class="sidebar-section" style="padding-bottom:12px">
+        <div class="sidebar-label">Download cleaned file</div>
+        <div class="sidebar-dl">
+          <a class="sidebar-dl-btn" id="dl-csv-chat" href="#" download>
+            <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            CSV
+          </a>
+          <a class="sidebar-dl-btn" id="dl-xlsx-chat" href="#" download>
+            <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+            Excel
+          </a>
+        </div>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-label">Domain</div>
+        <div class="domain-card">
+          <div class="domain-label">Detected domain</div>
+          <div class="domain-value">${escHtml(r.domain || 'General')}</div>
+          <div class="quality-bar-wrap">
+            <div class="quality-label">
+              <span>Data quality</span>
+              <span style="color:var(--accent);font-family:var(--font-mono)">${r.quality_score || 0}/100</span>
+            </div>
+            <div class="quality-track">
+              <div class="quality-fill" style="width:${r.quality_score || 0}%"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sidebar-section" style="flex:1;overflow:hidden;display:flex;flex-direction:column;padding-bottom:0">
+        <div class="sidebar-label">Columns</div>
+        <div class="columns-list">
+          ${cols.map(col => {
+            const dtype = (r.dtypes || {})[col] || '';
+            const type = dtype.includes('int') || dtype.includes('float') ? 'num'
+                       : dtype.includes('date') ? 'dt' : 'str';
+            const label = type === 'num' ? 'NUM' : type === 'dt' ? 'DATE' : 'TXT';
+            return `<div class="col-item">
+              <span class="col-type ${type}">${label}</span>
+              <span class="col-name" title="${escHtml(col)}">${escHtml(col)}</span>
+            </div>`;
+          }).join('')}
+        </div>
+      </div>
+
+      <div class="suggestions">
+        <div class="sidebar-label">Try asking</div>
+        ${getSuggestions(r).map(q => `
+          <button class="suggestion-btn" data-q="${escAttr(q)}">${escHtml(q)}</button>
+        `).join('')}
+      </div>
+    </aside>
+
+    <!-- Chat Main -->
+    <main class="chat-main">
+      <div class="messages-area" id="messages-area">
+        ${state.messages.length === 0 ? `
+        <div class="messages-empty">
+          <div class="empty-glyph">"</div>
+          <div class="empty-title">Ask your data anything</div>
+          <div class="empty-sub">Type a question below or pick a suggestion from the left panel</div>
+        </div>
+        ` : state.messages.map(renderMessage).join('')}
+        ${state.querying ? renderTypingIndicator() : ''}
+      </div>
+      <div class="input-area">
+        <div class="input-form">
+          <textarea
+            class="input-textarea"
+            id="query-input"
+            placeholder="What do you want to know about this data?"
+            rows="1"
+          ></textarea>
+          <button class="send-btn" id="btn-send" ${state.querying ? 'disabled' : ''}>
+            <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          </button>
+        </div>
+      </div>
+    </main>
+
+    <!-- Right Sidebar -->
+    <aside class="sidebar-right">
+      <div class="preview-tabs">
+        <button class="preview-tab ${state.previewTab==='stats'?'active':''}" data-tab="stats">Stats</button>
+        <button class="preview-tab ${state.previewTab==='preview'?'active':''}" data-tab="preview">Preview</button>
+        <button class="preview-tab ${state.previewTab==='history'?'active':''}" data-tab="history">History</button>
+      </div>
+      <div class="preview-content" id="preview-content">
+        ${renderPreviewTab()}
+      </div>
+      <button class="new-btn" id="btn-new-upload">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Upload new dataset
+      </button>
+    </aside>
+  </div>`;
+}
+
+function renderPreviewTab() {
+  const r = state.dataset;
+  if (!r) return '';
+
+  if (state.previewTab === 'stats') {
+    return `
+    <div class="stat-grid">
+      <div class="stat-card">
+        <div class="stat-val">${(r.row_count||0).toLocaleString()}</div>
+        <div class="stat-label">Total rows</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-val">${r.column_count || 0}</div>
+        <div class="stat-label">Columns</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-val" style="color:var(--accent)">${r.quality_score || 0}</div>
+        <div class="stat-label">Quality score</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-val">${state.messages.filter(m=>m.role==='ai').length}</div>
+        <div class="stat-label">Queries run</div>
+      </div>
+    </div>
+    <div style="padding:0 16px">
+      <div class="sidebar-label">Columns</div>
+      ${(r.columns||[]).map(col => {
+        const dt = (r.dtypes||{})[col] || 'object';
+        return `<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);font-size:12px">
+          <span style="color:var(--text2)">${escHtml(col)}</span>
+          <span style="font-family:var(--font-mono);color:var(--text3);font-size:10px">${escHtml(dt)}</span>
+        </div>`;
+      }).join('')}
+    </div>`;
+  }
+
+  if (state.previewTab === 'preview') {
+    if (!state.previewData) {
+      return `<div style="display:flex;align-items:center;justify-content:center;height:200px;color:var(--text3);font-size:12px">Loading preview…</div>`;
+    }
+    const rows = state.previewData.data || [];
+    const cols = state.previewData.columns || [];
+    if (!rows.length) return `<div style="padding:20px;color:var(--text3);font-size:12px">No data</div>`;
+    return `
+    <div style="overflow-x:auto">
+      <table class="data-table">
+        <thead><tr>${cols.map(c => `<th>${escHtml(c)}</th>`).join('')}</tr></thead>
+        <tbody>${rows.slice(0,20).map(row =>
+          `<tr>${cols.map(c => `<td>${escHtml(String(row[c] ?? ''))}</td>`).join('')}</tr>`
+        ).join('')}</tbody>
+      </table>
+    </div>`;
+  }
+
+  if (state.previewTab === 'history') {
+    if (!state.history.length) return `<div style="padding:20px;color:var(--text3);font-size:12px;text-align:center">No queries yet</div>`;
+    return `<div class="history-list">${state.history.map(h => `
+      <div class="history-item">
+        <div class="history-q">${escHtml(h.user_query)}</div>
+        <div class="history-meta">
+          <span class="${h.execution_success ? 'history-ok' : 'history-fail'}">${h.execution_success ? '✓' : '✗'}</span>
+          <span>${formatTime(h.created_at)}</span>
+        </div>
+      </div>
+    `).join('')}</div>`;
+  }
+  return '';
+}
+
+
+function renderDashboard() {
+  if (!state.dashboardData) {
+    return `<div class="dashboard-view">
+      <div class="dash-loading">
+        <div class="dash-spinner"></div>
+        <span>Loading dashboard…</span>
+      </div>
+    </div>`;
+  }
+
+  const d = state.dashboardData;
+  const ds = state.dataset;
+  const kpis = d.tiles.filter(t => t.type === 'kpi');
+  const charts = d.tiles.filter(t => t.type !== 'kpi' && t.type !== 'table');
+  const tables = d.tiles.filter(t => t.type === 'table');
+
+  return `<div class="dashboard-view fade-up">
+    <div class="dash-header">
+      <p class="dash-eyebrow">AUTO DASHBOARD</p>
+      <h2 class="dash-title">${escHtml(ds?.original_filename || 'Dataset overview')}</h2>
+      <p class="dash-sub">Domain: ${escHtml(d.domain || 'general')} · ${d.tile_count} insights generated</p>
+      <div class="dash-actions">
+        <button class="dash-btn primary" id="btn-to-chat">
+          <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          Start asking questions
+        </button>
+        <button class="dash-btn" id="btn-view-cleaning">
+          <svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+          Cleaning report
+        </button>
+        <button class="dash-btn" id="btn-dash-back">
+          <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+          Back
+        </button>
+      </div>
+    </div>
+
+    <div class="kpi-row">
+      ${kpis.slice(0,4).map(kpi => `
+        <div class="kpi-card ${escHtml(kpi.color || 'teal')}">
+          <div class="kpi-label">${escHtml(kpi.title)}</div>
+          <div>
+            <span class="kpi-value ${escHtml(kpi.color || 'teal')}">${escHtml(kpi.value)}</span>
+            ${kpi.unit ? `<span class="kpi-unit">${escHtml(kpi.unit)}</span>` : ''}
+          </div>
+          ${kpi.sub ? `<div class="kpi-sub">${escHtml(kpi.sub)}</div>` : ''}
+          ${kpi.insight ? `<div class="kpi-insight">${escHtml(kpi.insight)}</div>` : ''}
+        </div>
+      `).join('')}
+    </div>
+
+    <div class="charts-grid">
+      ${charts.slice(0,6).map((tile, idx) => `
+        <div class="chart-card ${idx === 0 || tile.type === 'line' ? 'wide' : ''}">
+          <div class="chart-title">${escHtml(tile.title)}</div>
+          <div class="chart-canvas-wrap">
+            <canvas id="chart-${escAttr(tile.id)}"></canvas>
+          </div>
+          ${tile.insight ? `
+            <div class="chart-insight">
+              <div class="chart-insight-icon">
+                <svg viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 1 7 7c0 3.1-2 5.8-4.9 6.7V17a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1v-1.3C7 14.8 5 12.1 5 9a7 7 0 0 1 7-7z"/><line x1="9" y1="21" x2="15" y2="21"/></svg>
+                Insight
+              </div>
+              <span>${escHtml(tile.insight)}</span>
+            </div>
+          ` : ''}
+        </div>
+      `).join('')}
+
+      ${tables.slice(0,1).map(tile => `
+        <div class="chart-card wide">
+          <div class="chart-title">${escHtml(tile.title)}</div>
+          <div class="dash-table-wrap">
+            <table class="dash-table">
+              <thead><tr>${(tile.columns||[]).map(c => `<th>${escHtml(String(c))}</th>`).join('')}</tr></thead>
+              <tbody>${(tile.rows||[]).map(row =>
+                `<tr>${(tile.columns||[]).map(c => `<td>${escHtml(String(row[c] ?? '—'))}</td>`).join('')}</tr>`
+              ).join('')}</tbody>
+            </table>
+          </div>
+        </div>
+      `).join('')}
+    </div>
+  </div>`;
+}
+
+
+function renderCleaning() {
+  const cr = state.cleaningReport;
+  if (!cr) {
+    return `<div class="cr-view"><div class="cr-loading"><div class="dash-spinner"></div><span>Loading cleaning report…</span></div></div>`;
+  }
+
+  const s = cr.summary || {};
+  const v = cr.validation || {};
+  const qb = Math.round(s.quality_before || 0);
+  const qa = Math.round(s.quality_after  || 0);
+  const passed = v.overall_passed;
+
+  return `<div class="cr-view fade-up">
+    <button class="cr-back" id="btn-cr-back">
+      <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+      Back to dashboard
+    </button>
+    <h2 class="cr-title">Cleaning report</h2>
+    <p class="cr-sub">${escHtml(cr.filename || '')} · ${s.rows_before?.toLocaleString()} rows original</p>
+
+    <!-- Before / After Banner -->
+    <div class="cr-banner">
+      <div class="cr-banner-side">
+        <div class="cr-banner-label">Before cleaning</div>
+        <div class="cr-banner-stat">
+          <span class="cr-banner-num">${(s.rows_before||0).toLocaleString()}</span>
+          <span class="cr-banner-unit">rows</span>
+        </div>
+        <div class="cr-banner-chips">
+          <span class="cr-chip">${s.cols_before||0} columns</span>
+          <span class="cr-chip ${qb<70?'red':qb<85?'amber':''}">${qb}% quality</span>
+        </div>
+      </div>
+      <div class="cr-banner-arrow">
+        <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </div>
+      <div class="cr-banner-side">
+        <div class="cr-banner-label">After cleaning</div>
+        <div class="cr-banner-stat">
+          <span class="cr-banner-num better">${(s.rows_after||0).toLocaleString()}</span>
+          <span class="cr-banner-unit">rows</span>
+        </div>
+        <div class="cr-banner-chips">
+          <span class="cr-chip">${s.cols_after||0} columns</span>
+          <span class="cr-chip green">${qa}% quality</span>
+          ${s.rows_removed>0 ? `<span class="cr-chip amber">${s.rows_removed} rows removed</span>` : ''}
+          ${s.cols_removed>0 ? `<span class="cr-chip amber">${s.cols_removed} cols dropped</span>` : ''}
+          ${s.actions_applied>0 ? `<span class="cr-chip green">${s.actions_applied} fixes applied</span>` : ''}
+        </div>
+      </div>
+    </div>
+
+    <!-- Quality score bar -->
+    <div class="cr-quality-wrap">
+      <div class="cr-quality-header">
+        <span class="cr-quality-label">Data quality score</span>
+        <span class="cr-quality-score">${qb}% → ${qa}% (+${Math.round(s.quality_improvement||0)} pts)</span>
+      </div>
+      <div class="cr-quality-track">
+        <div class="cr-quality-before" id="cr-qb-bar" style="width:0%"></div>
+        <div class="cr-quality-after"  id="cr-qa-bar" style="width:0%"></div>
+      </div>
+    </div>
+
+    <!-- Validation banner -->
+    <div class="cr-validation-banner ${passed?'passed':'failed'}">
+      ${passed
+        ? `<svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>`
+        : `<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>`
+      }
+      <p>${escHtml(v.summary || (passed ? 'All cleaning checks passed.' : 'Some issues need attention.'))}</p>
+    </div>
+
+    <!-- Action log -->
+    <div class="cr-section">
+      <div class="cr-section-title">What was changed</div>
+      <div class="cr-log">
+        ${(cr.action_log||[]).map(item => `
+          <div class="cr-log-item ${item.status}">
+            <div class="cr-log-icon ${item.status}">
+              ${item.status === 'applied'
+                ? `<svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>`
+                : `<svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>`
+              }
+            </div>
+            <div class="cr-log-text">
+              <div class="cr-log-label">${escHtml(item.label)}</div>
+              ${item.detail ? `<div class="cr-log-detail">${escHtml(item.detail)}</div>` : ''}
+            </div>
+            <span class="cr-log-badge ${item.status}">${item.status}</span>
+          </div>
+        `).join('')}
+        ${!(cr.action_log||[]).length ? '<p style="color:var(--text3);font-size:13px;padding:8px 0">No cleaning actions were needed.</p>' : ''}
+      </div>
+    </div>
+
+    <!-- Validation checks -->
+    ${(v.checks||[]).length ? `
+    <div class="cr-section">
+      <div class="cr-section-title">Issue verification</div>
+      <div class="cr-checks">
+        ${(v.checks||[]).map(check => `
+          <div class="cr-check">
+            <div class="cr-check-dot ${check.status}"></div>
+            <div class="cr-check-body">
+              <div class="cr-check-msg">${escHtml(check.message)}</div>
+            </div>
+            <span class="cr-check-status ${check.status}">${check.status}</span>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+    ` : ''}
+
+    <!-- Per-column table -->
+    ${(v.per_column||[]).length ? `
+    <div class="cr-section">
+      <div class="cr-section-title">Column-by-column result</div>
+      <div style="overflow-x:auto;border:1px solid var(--border);border-radius:var(--r2)">
+        <table class="cr-col-table">
+          <thead><tr>
+            <th>Column</th>
+            <th>Status</th>
+            <th>Missing values</th>
+            <th>Data type</th>
+          </tr></thead>
+          <tbody>
+            ${(v.per_column||[]).map(col => `
+              <tr>
+                <td class="cr-col-name">${escHtml(col.column)}</td>
+                <td><span class="status-pill ${col.status}">${col.status}</span></td>
+                <td>
+                  ${col.missing_before > 0
+                    ? `<span class="miss-val was-bad">${col.missing_before}</span>
+                       <span class="miss-arrow">→</span>
+                       <span class="miss-val now-good">${col.missing_after}</span>`
+                    : `<span class="miss-val" style="color:var(--text3)">none</span>`
+                  }
+                </td>
+                <td style="font-family:var(--font-mono);font-size:11px;color:var(--text3)">
+                  ${col.dtype_before === col.dtype_after
+                    ? escHtml(col.dtype_after)
+                    : `<span style="color:var(--danger)">${escHtml(col.dtype_before)}</span>
+                       <span style="color:var(--text3)">→</span>
+                       <span style="color:var(--accent)">${escHtml(col.dtype_after)}</span>`
+                  }
+                </td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    ` : ''}
+
+  </div>`;
+}
+
+function renderMessage(msg) {
+  if (msg.role === 'user') {
+    return `<div class="msg">
+      <div class="msg-avatar user">
+        <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      </div>
+      <div class="msg-content">
+        <div class="msg-header">
+          <span class="msg-name">You</span>
+          <span class="msg-time">${formatTime(msg.time)}</span>
+        </div>
+        <div class="msg-bubble">${escHtml(msg.text)}</div>
+      </div>
+    </div>`;
+  }
+
+  const r = msg.result;
+  return `<div class="msg">
+    <div class="msg-avatar ai">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+    </div>
+    <div class="msg-content">
+      <div class="msg-header">
+        <span class="msg-name">InsightEngine</span>
+        <span class="msg-time">${formatTime(msg.time)}</span>
+      </div>
+      ${msg.error ? `<div class="msg-error">${escHtml(msg.text)}</div>` : `
+        <div class="msg-bubble">
+          <div class="msg-story">${escHtml(msg.text)}</div>
+        </div>
+        ${r ? renderResult(r) : ''}
+      `}
+    </div>
+  </div>`;
+}
+
+function renderResult(r) {
+  const type = r.output_type || '';
+  const time = r.execution_time_ms ? `${r.execution_time_ms}ms` : '';
+  const res  = r.result;
+
+  if (res === null || res === undefined) return '';
+
+  let body = '';
+  let label = type || 'result';
+
+  // ── Number ──────────────────────────────────────────────────────────────
+  if (type === 'number' || typeof res === 'number') {
+    const val = typeof res === 'number'
+      ? res.toLocaleString(undefined, {maximumFractionDigits: 2})
+      : String(res);
+    body = `<div class="number-result">${escHtml(val)}</div>`;
+
+  // ── DataFrame ────────────────────────────────────────────────────────────
+  } else if (type === 'dataframe' || (typeof res === 'object' && res?.type === 'dataframe')) {
+    const data = res.data || [];
+    const cols = res.columns || [];
+    if (!data.length) { body = `<div class="text-result">Empty table</div>`; }
+    else {
+      body = `<div class="data-table-wrap"><table class="data-table">
+        <thead><tr>${cols.map(c => `<th>${escHtml(String(c))}</th>`).join('')}</tr></thead>
+        <tbody>${data.slice(0,100).map(row =>
+          `<tr>${cols.map(c => `<td>${escHtml(String(row[c] ?? ''))}</td>`).join('')}</tr>`
+        ).join('')}</tbody>
+      </table></div>`;
+      label = `table · ${data.length} rows`;
+    }
+
+  // ── Series (backend serialises as {type:"series", data:{k:v...}}) ────────
+  } else if (type === 'series' || (typeof res === 'object' && res?.type === 'series')) {
+    const data = typeof res === 'object' ? (res.data || res) : res;
+    const entries = Object.entries(data);
+    if (!entries.length) { body = `<div class="text-result">Empty result</div>`; }
+    else {
+      body = `<div class="dict-result">${
+        entries.slice(0, 30).map(([k, v]) => {
+          const num = typeof v === 'number';
+          const display = num ? Number(v).toLocaleString(undefined, {maximumFractionDigits: 2}) : String(v);
+          return `<div class="dict-row">
+            <span class="dict-key">${escHtml(String(k))}</span>
+            <span class="dict-val">${escHtml(display)}</span>
+          </div>`;
+        }).join('')
+      }${entries.length > 30 ? `<div style="font-size:11px;color:var(--text3);padding:6px 0">+ ${entries.length-30} more rows</div>` : ''}</div>`;
+      label = `${entries.length} values`;
+    }
+
+  // ── String / text ────────────────────────────────────────────────────────
+  } else if (type === 'text' || typeof res === 'string') {
+    body = `<div class="text-result">${escHtml(String(res))}</div>`;
+
+  // ── Dict (nested summary / stats) ────────────────────────────────────────
+  } else if (type === 'dict' || (typeof res === 'object' && !Array.isArray(res) && res !== null)) {
+    body = renderDict(res);
+    label = `${Object.keys(res).length} fields`;
+
+  // ── List / array ──────────────────────────────────────────────────────────
+  } else if (type === 'list' || Array.isArray(res)) {
+    const items = Array.isArray(res) ? res : [];
+    body = `<div class="dict-result">${items.slice(0, 25).map((v, i) =>
+      `<div class="dict-row"><span class="dict-key" style="min-width:32px">${i+1}</span>
+       <span class="dict-val">${escHtml(String(v))}</span></div>`
+    ).join('')}${items.length > 25 ? `<div style="font-size:11px;color:var(--text3);padding:6px 0">+ ${items.length-25} more</div>` : ''}</div>`;
+  }
+
+  if (!body) return '';
+
+  return `<div class="result-card">
+    <div class="result-header">
+      <span class="result-type">${escHtml(label)}</span>
+      ${time ? `<span class="result-time">${escHtml(time)}</span>` : ''}
+    </div>
+    <div class="result-body">${body}</div>
+  </div>`;
+}
+
+function renderDict(obj, depth) {
+  depth = depth || 0;
+  if (depth > 1) return `<span class="dict-val">${escHtml(JSON.stringify(obj).substring(0,80))}</span>`;
+  const entries = Object.entries(obj);
+  return `<div class="dict-result">${
+    entries.slice(0, 30).map(([k, v]) => {
+      let val = '';
+      if (v === null || v === undefined) {
+        val = `<span class="dict-val" style="color:var(--text3)">—</span>`;
+      } else if (typeof v === 'number') {
+        val = `<span class="dict-val">${v.toLocaleString(undefined, {maximumFractionDigits:2})}</span>`;
+      } else if (typeof v === 'object' && !Array.isArray(v)) {
+        val = renderDict(v, depth + 1);
+      } else if (Array.isArray(v)) {
+        val = `<span class="dict-val">[${v.slice(0,5).map(x=>escHtml(String(x))).join(', ')}${v.length>5?'…':''}]</span>`;
+      } else {
+        val = `<span class="dict-val">${escHtml(String(v))}</span>`;
+      }
+      return `<div class="dict-row"><span class="dict-key">${escHtml(String(k))}</span>${val}</div>`;
+    }).join('')
+  }${entries.length > 30 ? `<div style="font-size:11px;color:var(--text3);padding:6px 0">+ ${entries.length-30} more</div>` : ''}</div>`;
+}
+
+function renderTypingIndicator() {
+  return `<div class="msg">
+    <div class="msg-avatar ai">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+    </div>
+    <div class="msg-content">
+      <div class="msg-header"><span class="msg-name">InsightEngine</span></div>
+      <div class="msg-bubble">
+        <div class="typing-dots">
+          <div class="typing-dot"></div>
+          <div class="typing-dot"></div>
+          <div class="typing-dot"></div>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderToast() {
+  return `<div class="toast ${state.toast.type}">${escHtml(state.toast.msg)}</div>`;
+}
+
+// ─── Events ──────────────────────────────────────────────────────────────────
+function attachEvents() {
+  // File input
+  const fi = document.getElementById('file-input');
+  if (fi) fi.addEventListener('change', e => {
+    const file = e.target.files[0];
+    if (file) { state.file = file; state.uploadError = null; render(); }
+  });
+
+  // Drag and drop
+  const dz = document.getElementById('dropzone');
+  if (dz) {
+    dz.addEventListener('dragover', e => { e.preventDefault(); dz.classList.add('drag-over'); });
+    dz.addEventListener('dragleave', () => dz.classList.remove('drag-over'));
+    dz.addEventListener('drop', e => {
+      e.preventDefault(); dz.classList.remove('drag-over');
+      const file = e.dataTransfer.files[0];
+      if (file) { state.file = file; state.uploadError = null; render(); }
+    });
+  }
+
+  // Upload button
+  const btnUpload = document.getElementById('btn-upload');
+  if (btnUpload) btnUpload.addEventListener('click', doUpload);
+
+  // Done → Dashboard
+  const btnDash = document.getElementById('btn-view-dashboard');
+  if (btnDash) btnDash.addEventListener('click', () => {
+    state.dataset = state.uploadResult;
+    state.dashboardData = null;
+    state.view = 'dashboard';
+    render();
+    loadDashboard(state.dataset.dataset_id);
+  });
+
+  // Start chat (legacy, from done view)
+  const btnStart = document.getElementById('btn-start-chat');
+  if (btnStart) btnStart.addEventListener('click', () => {
+    state.dataset = state.uploadResult;
+    state.view = 'chat';
+    render();
+    loadPreview();
+    loadHistory();
+  });
+
+  // New upload
+  document.querySelectorAll('#btn-new-upload').forEach(btn =>
+    btn.addEventListener('click', resetToUpload));
+
+  // Send query
+  const btnSend = document.getElementById('btn-send');
+  if (btnSend) btnSend.addEventListener('click', doQuery);
+
+  const textarea = document.getElementById('query-input');
+  if (textarea) {
+    textarea.addEventListener('keydown', e => {
+      if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); doQuery(); }
+    });
+    textarea.addEventListener('input', () => {
+      textarea.style.height = 'auto';
+      textarea.style.height = Math.min(textarea.scrollHeight, 120) + 'px';
+    });
+  }
+
+  // Suggestions
+  document.querySelectorAll('.suggestion-btn').forEach(btn =>
+    btn.addEventListener('click', () => {
+      const q = btn.getAttribute('data-q');
+      if (q) {
+        const ta = document.getElementById('query-input');
+        if (ta) { ta.value = q; ta.dispatchEvent(new Event('input')); }
+        doQuery(q);
+      }
+    }));
+
+  // Preview tabs
+  document.querySelectorAll('.preview-tab').forEach(tab =>
+    tab.addEventListener('click', () => {
+      state.previewTab = tab.getAttribute('data-tab');
+      render();
+      if (state.previewTab === 'preview' && !state.previewData) loadPreview();
+      if (state.previewTab === 'history') loadHistory();
+    }));
+
+
+
+  // Cleaning report navigation
+  const btnCrBack = document.getElementById('btn-cr-back');
+  if (btnCrBack) btnCrBack.addEventListener('click', () => {
+    state.view = 'dashboard';
+    render();
+  });
+  // Animate quality bars after render
+  if (state.view === 'cleaning' && state.cleaningReport) {
+    requestAnimationFrame(() => {
+      const qb = Math.round((state.cleaningReport.summary||{}).quality_before||0);
+      const qa = Math.round((state.cleaningReport.summary||{}).quality_after||0);
+      const barBefore = document.getElementById('cr-qb-bar');
+      const barAfter  = document.getElementById('cr-qa-bar');
+      if (barBefore) setTimeout(() => barBefore.style.width = qb + '%', 50);
+      if (barAfter)  setTimeout(() => barAfter.style.width  = qa + '%', 80);
+    });
+  }
+
+  // Dashboard navigation
+  const btnToChat = document.getElementById('btn-to-chat');
+  if (btnToChat) btnToChat.addEventListener('click', () => {
+    state.dataset = state.uploadResult;
+    state.view = 'chat';
+    render();
+    loadPreview();
+    loadHistory();
+  });
+  const btnViewCleaning = document.getElementById('btn-view-cleaning');
+  if (btnViewCleaning) btnViewCleaning.addEventListener('click', () => {
+    state.cleaningReport = null;
+    state.view = 'cleaning';
+    render();
+    loadCleaningReport(state.dataset.dataset_id);
+  });
+
+  const btnDashBack = document.getElementById('btn-dash-back');
+  if (btnDashBack) btnDashBack.addEventListener('click', () => {
+    state.view = 'done';
+    render();
+  });
+
+  // Render charts after DOM is ready
+  if (state.view === 'dashboard' && state.dashboardData) {
+    requestAnimationFrame(() => renderCharts(state.dashboardData.tiles));
+  }
+
+  // Wire download links — done view
+  const datasetId = state.uploadResult?.dataset_id || state.dataset?.dataset_id;
+  const dlCsvDone  = document.getElementById('dl-csv-done');
+  const dlXlsxDone = document.getElementById('dl-xlsx-done');
+  const dlCsvChat  = document.getElementById('dl-csv-chat');
+  const dlXlsxChat = document.getElementById('dl-xlsx-chat');
+
+  if (datasetId) {
+    const csvUrl  = `${API}/datasets/${datasetId}/download?format=csv`;
+    const xlsxUrl = `${API}/datasets/${datasetId}/download?format=xlsx`;
+    if (dlCsvDone)  dlCsvDone.href  = csvUrl;
+    if (dlXlsxDone) dlXlsxDone.href = xlsxUrl;
+    if (dlCsvChat)  dlCsvChat.href  = csvUrl;
+    if (dlXlsxChat) dlXlsxChat.href = xlsxUrl;
+  }
+
+  // Scroll messages to bottom
+  const ma = document.getElementById('messages-area');
+  if (ma) ma.scrollTop = ma.scrollHeight;
+}
+
+
+// ─── Chart Rendering ──────────────────────────────────────────────────────────
+const CHART_REGISTRY = {};
+
+const PALETTE = {
+  default: ['#00C896','#4B9FFF','#8B7CF6','#FF8C42','#22c55e','#f59e0b','#FF4B6E','#06b6d4'],
+  teal:    ['#00C896'],
+  purple:  ['#8B7CF6'],
+  danger:  ['#FF4B6E'],
+};
+
+function getColors(scheme, n) {
+  const base = PALETTE[scheme] || PALETTE.default;
+  const out = [];
+  for (let i = 0; i < n; i++) out.push(base[i % base.length]);
+  return out;
+}
+
+function destroyChart(id) {
+  if (CHART_REGISTRY[id]) {
+    CHART_REGISTRY[id].destroy();
+    delete CHART_REGISTRY[id];
+  }
+}
+
+function renderCharts(tiles) {
+  (tiles || []).forEach(tile => {
+    if (!tile.chart_data) return;
+    const canvasId = 'chart-' + tile.id;
+    const canvas = document.getElementById(canvasId);
+    if (!canvas) return;
+
+    destroyChart(canvasId);
+    const ctx = canvas.getContext('2d');
+    const scheme = tile.color_scheme || 'default';
+    const labels = tile.chart_data.labels || [];
+    const n = labels.length;
+
+    // Apply colors to datasets
+    const datasets = (tile.chart_data.datasets || []).map((ds, di) => {
+      const cols = getColors(scheme, n);
+      if (tile.type === 'pie') {
+        return { ...ds, backgroundColor: cols, borderWidth: 0 };
+      }
+      const col = getColors(scheme, 1)[0];
+      return {
+        ...ds,
+        backgroundColor: tile.type === 'line'
+          ? col + '22'
+          : getColors(scheme, n),
+        borderColor: tile.type === 'line' ? col : getColors(scheme, n).map(c => c + 'cc'),
+        borderWidth: tile.type === 'line' ? 2 : 0,
+        borderRadius: tile.type === 'bar' ? 4 : 0,
+        tension: 0.4,
+        pointRadius: tile.type === 'line' ? 3 : 0,
+      };
+    });
+
+    const isDark = document.documentElement.classList.contains('dark')
+      || window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const gridColor = isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)';
+    const tickColor = isDark ? '#5C5870' : '#aaa';
+    const legendColor = isDark ? '#9B97A0' : '#666';
+
+    const opts = {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          display: tile.type === 'pie',
+          labels: { color: legendColor, font: { size: 11 }, boxWidth: 12, padding: 12 },
+        },
+        tooltip: { callbacks: { label: ctx => ' ' + (ctx.parsed?.y ?? ctx.parsed ?? '').toLocaleString() } },
+      },
+      scales: tile.type === 'pie' ? {} : {
+        x: {
+          grid: { color: gridColor },
+          ticks: { color: tickColor, font: { size: 10 }, maxRotation: 35 },
+        },
+        y: {
+          grid: { color: gridColor },
+          ticks: { color: tickColor, font: { size: 10 } },
+          min: tile.options?.yMin,
+          max: tile.options?.yMax,
+        },
+      },
+    };
+
+    CHART_REGISTRY[canvasId] = new Chart(ctx, {
+      type: tile.type === 'line' ? 'line' : tile.type === 'pie' ? 'doughnut' : 'bar',
+      data: { labels, datasets },
+      options: opts,
+    });
+  });
+}
+
+// ─── API Calls ────────────────────────────────────────────────────────────────
+async function doUpload() {
+  if (!state.file || state.uploading) return;
+  state.uploading = true;
+  state.uploadError = null;
+  state.view = 'processing';
+  state.processingStep = 0;
+  render();
+
+  // Animate pipeline steps
+  const stepInterval = setInterval(() => {
+    if (state.processingStep < PIPELINE_STEPS.length - 1) {
+      state.processingStep++;
+      render();
+    }
+  }, 900);
+
+  const formData = new FormData();
+  formData.append('file', state.file);
+
+  try {
+    const res = await fetch(`${API}/upload/`, { method: 'POST', body: formData });
+    clearInterval(stepInterval);
+
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.detail || `Upload failed (${res.status})`);
+    }
+
+    const data = await res.json();
+    state.uploadResult = data;
+    state.processingStep = PIPELINE_STEPS.length;
+    state.view = 'done';
+    state.uploading = false;
+    render();
+
+  } catch (err) {
+    clearInterval(stepInterval);
+    state.uploading = false;
+    state.uploadError = err.message;
+    state.view = 'upload';
+    render();
+  }
+}
+
+async function doQuery(overrideText) {
+  const ta = document.getElementById('query-input');
+  const question = overrideText || (ta ? ta.value.trim() : '');
+  if (!question || state.querying) return;
+
+  const datasetId = state.dataset?.dataset_id;
+  if (!datasetId) return;
+
+  if (ta) ta.value = '';
+
+  state.messages.push({ role: 'user', text: question, time: new Date() });
+  state.querying = true;
+  render();
+
+  try {
+    const res = await fetch(`${API}/datasets/${datasetId}/query`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ question }),
+    });
+
+    const data = await res.json();
+
+    state.messages.push({
+      role: 'ai',
+      text: data.story || 'No response',
+      time: new Date(),
+      error: !data.success,
+      result: data.success ? {
+        result: data.result,
+        output_type: data.output_type,
+        execution_time_ms: data.execution_time_ms,
+      } : null,
+    });
+
+    // Update history count
+    loadHistory();
+
+  } catch (err) {
+    state.messages.push({
+      role: 'ai',
+      text: 'Unable to connect to the analysis server. Please check that the backend is running at localhost:8000.',
+      time: new Date(),
+      error: true,
+    });
+  }
+
+  state.querying = false;
+  render();
+}
+
+
+
+async function loadCleaningReport(datasetId) {
+  try {
+    const res = await fetch(`${API}/datasets/${datasetId}/cleaning-report`);
+    if (res.ok) {
+      state.cleaningReport = await res.json();
+      render();
+    }
+  } catch(e) {
+    console.error('Cleaning report load failed:', e);
+  }
+}
+
+async function loadDashboard(datasetId) {
+  try {
+    const res = await fetch(`${API}/datasets/${datasetId}/dashboard`);
+    if (res.ok) {
+      state.dashboardData = await res.json();
+      render();
+    }
+  } catch (e) {
+    console.error('Dashboard load failed:', e);
+  }
+}
+
+async function loadPreview() {
+  const id = state.dataset?.dataset_id;
+  if (!id) return;
+  try {
+    const res = await fetch(`${API}/datasets/${id}/preview?rows=20`);
+    if (res.ok) {
+      state.previewData = await res.json();
+      if (state.previewTab === 'preview') {
+        document.getElementById('preview-content').innerHTML = renderPreviewTab();
+      }
+    }
+  } catch {}
+}
+
+async function loadHistory() {
+  const id = state.dataset?.dataset_id;
+  if (!id) return;
+  try {
+    const res = await fetch(`${API}/datasets/${id}/history?limit=50`);
+    if (res.ok) {
+      const data = await res.json();
+      state.history = data.items || [];
+      if (state.previewTab === 'history') {
+        document.getElementById('preview-content').innerHTML = renderPreviewTab();
+      }
+    }
+  } catch {}
+}
+
+function resetToUpload() {
+  state = {
+    view:'upload', file:null, uploading:false, uploadProgress:0,
+    uploadResult:null, uploadError:null, dataset:null,
+    messages:[], querying:false, history:[], previewData:null,
+    previewTab:'stats', toast:null,
+  };
+  render();
+}
+
+function showToast(msg, type='info') {
+  state.toast = { msg, type };
+  render();
+  setTimeout(() => { state.toast = null; render(); }, 3500);
+}
+
+// ─── Helpers ─────────────────────────────────────────────────────────────────
+function escHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function escAttr(s) { return String(s).replace(/"/g,'&quot;'); }
+
+function formatBytes(b) {
+  if (b < 1024) return b + ' B';
+  if (b < 1048576) return (b/1024).toFixed(1) + ' KB';
+  return (b/1048576).toFixed(1) + ' MB';
+}
+
+function formatTime(d) {
+  if (!d) return '';
+  const dt = d instanceof Date ? d : new Date(d);
+  if (isNaN(dt)) return '';
+  return dt.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+}
+
+function getSuggestions(dataset) {
+  const cols = dataset.columns || [];
+  const domain = (dataset.domain || 'general').toLowerCase();
+  const numCols = cols.filter(c => {
+    const dt = (dataset.dtypes||{})[c] || '';
+    return dt.includes('int') || dt.includes('float');
+  });
+  const catCols = cols.filter(c => !numCols.includes(c));
+
+  const suggestions = [];
+  if (numCols[0]) suggestions.push(`What is the average ${numCols[0]}?`);
+  if (catCols[0] && numCols[0]) suggestions.push(`Show ${numCols[0]} grouped by ${catCols[0]}`);
+  if (numCols[0]) suggestions.push(`Which rows have the highest ${numCols[0]}?`);
+  suggestions.push('Are there any missing or unusual values?');
+  if (domain === 'sales') suggestions.push('What are the top performing products?');
+  if (domain === 'hr') suggestions.push('What is the salary distribution by department?');
+  return suggestions.slice(0, 4);
+}
+
+// ─── Init ─────────────────────────────────────────────────────────────────────
+render();
+</script>
+</body>
+</html>

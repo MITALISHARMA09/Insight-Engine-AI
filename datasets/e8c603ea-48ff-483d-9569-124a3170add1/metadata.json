@@ -1,0 +1,211 @@
+{
+  "dataset_id": "e8c603ea-48ff-483d-9569-124a3170add1",
+  "original_filename": "synthetic_dataset.csv",
+  "status": "processing",
+  "row_count": 4362,
+  "column_count": 5,
+  "columns": [
+    "Category",
+    "Price",
+    "Rating",
+    "Stock",
+    "Discount"
+  ],
+  "dtypes": {
+    "Category": "str",
+    "Price": "float64",
+    "Rating": "float64",
+    "Stock": "str",
+    "Discount": "float64"
+  },
+  "sample_rows": [
+    {
+      "Category": NaN,
+      "Price": 5548.0,
+      "Rating": 1.870322015500628,
+      "Stock": NaN,
+      "Discount": 0.0
+    },
+    {
+      "Category": NaN,
+      "Price": 3045.0,
+      "Rating": 4.757798057831803,
+      "Stock": NaN,
+      "Discount": 38.0
+    },
+    {
+      "Category": NaN,
+      "Price": 4004.0,
+      "Rating": NaN,
+      "Stock": "In Stock",
+      "Discount": 0.0
+    },
+    {
+      "Category": NaN,
+      "Price": 4808.0,
+      "Rating": 1.492084885301209,
+      "Stock": NaN,
+      "Discount": 33.0
+    },
+    {
+      "Category": NaN,
+      "Price": 1817.0,
+      "Rating": NaN,
+      "Stock": "Out of Stock",
+      "Discount": 23.0
+    }
+  ],
+  "domain": "finance",
+  "domain_details": {
+    "domain": "finance",
+    "sub_domain": "finance",
+    "confidence": 0.4,
+    "likely_questions": [
+      "What are the key trends in this dataset?",
+      "Which values are highest?",
+      "Are there any anomalies?"
+    ],
+    "key_metrics": [
+      "Category",
+      "Price",
+      "Rating"
+    ],
+    "reasoning": "Determined by keyword matching (LLM unavailable)."
+  },
+  "profiling_report": {
+    "total_rows": 4362,
+    "total_columns": 5,
+    "columns": [
+      "Category",
+      "Price",
+      "Rating",
+      "Stock",
+      "Discount"
+    ],
+    "dtypes": {
+      "Category": "str",
+      "Price": "float64",
+      "Rating": "float64",
+      "Stock": "str",
+      "Discount": "float64"
+    },
+    "missing_values": {
+      "Category": {
+        "count": 2748,
+        "percentage": 63.0,
+        "dtype": "str"
+      },
+      "Price": {
+        "count": 174,
+        "percentage": 3.99,
+        "dtype": "float64"
+      },
+      "Rating": {
+        "count": 2050,
+        "percentage": 47.0,
+        "dtype": "float64"
+      },
+      "Stock": {
+        "count": 1352,
+        "percentage": 30.99,
+        "dtype": "str"
+      },
+      "Discount": {
+        "count": 392,
+        "percentage": 8.99,
+        "dtype": "float64"
+      }
+    },
+    "duplicates": {
+      "count": 15,
+      "percentage": 0.34,
+      "has_duplicates": true
+    },
+    "outliers": {},
+    "type_issues": {},
+    "constant_columns": [],
+    "high_cardinality": {},
+    "quality_score": 69.8,
+    "issues_count": 6
+  },
+  "quality_score": 69.8,
+  "quality_summary": "Your data has a quality score of 69.8/100. Here's what we found:\n\u2022 Some entries are missing in columns like: Category, Price, Rating\n\u2022 There are 15 repeated rows that can be removed",
+  "cleaning_plan": [
+    {
+      "action": "remove_duplicates"
+    },
+    {
+      "action": "drop_missing_rows",
+      "column": "Category",
+      "threshold": 0.5
+    },
+    {
+      "action": "fill_missing",
+      "column": "Price",
+      "method": "median"
+    },
+    {
+      "action": "fill_missing",
+      "column": "Rating",
+      "method": "median"
+    },
+    {
+      "action": "fill_missing",
+      "column": "Stock",
+      "method": "mode"
+    },
+    {
+      "action": "fill_missing",
+      "column": "Discount",
+      "method": "median"
+    }
+  ],
+  "cleaning_report": {
+    "actions_applied": [
+      {
+        "action": "remove_duplicates"
+      },
+      {
+        "action": "drop_missing_rows",
+        "column": "Category",
+        "threshold": 0.5
+      },
+      {
+        "action": "fill_missing",
+        "column": "Price",
+        "method": "median"
+      },
+      {
+        "action": "fill_missing",
+        "column": "Rating",
+        "method": "median"
+      },
+      {
+        "action": "fill_missing",
+        "column": "Stock",
+        "method": "mode"
+      },
+      {
+        "action": "fill_missing",
+        "column": "Discount",
+        "method": "median"
+      }
+    ],
+    "actions_skipped": [],
+    "rows_before": 4362,
+    "rows_after": 1614,
+    "columns_before": 5,
+    "columns_after": 5,
+    "rows_removed": 2748,
+    "columns_removed": 0
+  },
+  "cleaning_summary": "We cleaned your dataset with 6 improvements:\n\u2022 Removed 2748 duplicate or incomplete rows\n\u2022 Filled in missing values in 'Price'\n\u2022 Filled in missing values in 'Rating'\n\u2022 Filled in missing values in 'Stock'\n\u2022 Filled in missing values in 'Discount'",
+  "is_cleaned": true,
+  "has_embeddings": true,
+  "rag_info": {
+    "chunks_count": 56,
+    "index_path": "./datasets\\e8c603ea-48ff-483d-9569-124a3170add1\\index.faiss",
+    "chunks_path": "./datasets\\e8c603ea-48ff-483d-9569-124a3170add1\\chunks.pkl",
+    "embedding_dim": 256
+  }
+}
