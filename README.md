@@ -269,61 +269,38 @@ InsightEngine/
 │   └── index.html
 │
 ├── main.py
+text```
 
-## Typical End-to-End Flow
-User uploads a dataset
-Backend validates and stores metadata
-Profiling module analyzes dataset quality
-Domain expert identifies likely dataset type
-AI cleaner proposes cleaning operations
-Cleaning executor applies transformations
-RAG module builds dataset context index
-Auto dashboard module creates summaries and charts
-User asks a question in plain English
-RAG retrieves relevant context
-Coder A and Coder B generate pandas logic
-Judge selects the better output
-Sandbox executes the selected code
-Storyteller explains the result
-Query history is saved in SQLite
-Strengths of the Project
-Modular and structured architecture
-End-to-end automated data workflow
-Combines rule-based and AI-based cleaning
-Supports natural language interaction with datasets
-Multi-agent design improves robustness
-Context-aware answers through RAG
-Auto-dashboard generation reduces manual effort
-Lightweight local persistence through SQLite
 
 ## Current Limitations
-Frontend is lightweight and may need expansion for larger-scale production use
-LLM quality depends on model/provider availability
-Best suited for structured tabular datasets such as CSV and Excel
-Large-scale enterprise datasets may require further optimization
-Query accuracy depends on schema clarity and generated code quality
+- Frontend is lightweight and may need expansion for larger-scale production use
+- LLM quality depends on model/provider availability
+- Best suited for structured tabular datasets such as CSV and Excel
+- Large-scale enterprise datasets may require further optimization
+- Query accuracy depends on schema clarity and generated code quality
 
 ## Use Cases
 
 InsightEngine AI is suitable for:
 
-Academic and internship projects
-Quick dataset understanding
-Business data exploration
-Automated preliminary analytics
-Demonstrating AI-assisted data workflows
-Helping non-technical users interact with structured data
-Future Scope
+- Academic and internship projects
+- Quick dataset understanding
+- Business data exploration
+- Automated preliminary analytics
+- Demonstrating AI-assisted data workflows
+- Helping non-technical users interact with structured data
 
-## Possible future improvements include:
+## Future Scope
 
-More advanced frontend components
-Better visualization interactivity
-Stronger chart rendering in chat responses
-More robust data validation rules
-Expanded support for larger datasets
-Improved agent coordination and response reliability
-Enhanced deployment and authentication support
+Possible future improvements include:
+
+- More advanced frontend components
+- Better visualization interactivity
+- Stronger chart rendering in chat responses
+- More robust data validation rules
+- Expanded support for larger datasets
+- Improved agent coordination and response reliability
+- Enhanced deployment and authentication support
 
 ## Conclusion
 
