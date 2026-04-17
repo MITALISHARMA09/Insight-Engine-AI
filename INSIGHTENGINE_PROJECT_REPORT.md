@@ -93,5 +93,3 @@ CSV → Validate → orchestrator.process_upload() [8 async steps ~10-30s]
 2. Rate limits/auth.
 3. Streaming responses (Server-Sent Events).
 4. More domains/agents.
-
-**Report generated from full codebase scan. Questions? Ask!**
